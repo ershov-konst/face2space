@@ -1,14 +1,11 @@
 requirejs.config({
    paths: {
       'three': '../lib/three',
-      'EventBus': '../lib/EventBus'
+      'EventBus': '../lib/EventBus',
+      'jquery': '../lib/jquery-2.1.4.min'
    }
 });
 
-require(['three', 'EventBus'], function(tm, THREE, EventBus){
+require(['Master'], function(Master){
 
-   var t = new tm();
-   console.log(t.testMethod(2));
-   console.log(THREE);
-   console.log(EventBus);
 });
