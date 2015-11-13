@@ -11,5 +11,4 @@ require(['three', 'EventBus'], function(tm, THREE, EventBus){
    console.log(t.testMethod(2));
    console.log(THREE);
    console.log(EventBus);
-
 });
