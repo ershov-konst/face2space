@@ -25,11 +25,7 @@ define(['three', 'EventBus'], function(Three, EventBus){
         var asteroid = Game.prototype._asteroid = new Three.Mesh(sphereGeometry, sphereMaterial);
         asteroid.position.set(5000, 5000, 0);
 
-        var worldOrigin = new Three.Mesh(sphereGeometry, new Three.MeshBasicMaterial({color: 0xFF0000})); // just to orient
-        worldOrigin.position.set(0, 0, 0);
-
         scene.add(asteroid);
-        scene.add(worldOrigin);
     }
 
     /**
