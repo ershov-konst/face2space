@@ -3,8 +3,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var renderer,
         scene,
         camera,
-        checker,
-        eventBus = new EventBus();
+        checker;
 
     var requestId; // for requestAnimationFrame()
     var createAsteroidInterval, timeSpentInterval;
@@ -48,6 +47,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         generateSimpleObjects = setInterval(function () {
             console.log("timer_1 " + timer_1 );
             createAsteroidWithGenerator(generator1);
+            createAsteroidWithGenerator(generator2);
             timer_1 ++;
             if ( timer_1 == tr1) {
                 clearInterval(generateSimpleObjects);
@@ -108,6 +108,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      * @param $placeholder jQuery wrapped DOM element where the scene will be rendered
      */
     function Game($placeholder) {
+        this.handleHitTimeout;
+        this.eventBus = new EventBus();
+
         scene = new Three.Scene();
         var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
@@ -131,6 +134,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function startGeneratingAsteroids() {
+        if (createAsteroidInterval) {
+            clearInterval(createAsteroidInterval);
+            createAsteroidInterval = null;
+        }
+
         createAsteroidInterval =  setInterval(function() {
             createAsteroidWithGenerator(generator1);
             createAsteroidWithGenerator(generator2);
@@ -140,9 +148,15 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function stopGeneratingAsteroids() {
         clearInterval(createAsteroidInterval);
+        createAsteroidInterval = null;
     }
 
     function startVelocityIncreasing() {
+        if (timeSpentInterval != null) {
+            clearInterval(timeSpentInterval);
+            timeSpentInterval = null;
+        }
+
         timeSpentInterval = setInterval(function () {
             timeSpent++;
             var delta = getVelocityDelta(timeSpent);
@@ -159,6 +173,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function stopVelocityIncreasing() {
         clearInterval(timeSpentInterval);
+        timeSpentInterval = null;
     }
 
     function getVelocityDelta(time) {
@@ -193,10 +208,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     Game.prototype.stop = function() {
+        clearTimeout(this.handleHitTimeout);
         stopAnimation();
         stopGeneratingAsteroids();
         stopVelocityIncreasing();
-        currentVelocity = 0;
+        currentVelocity = INITIAL_VELOCITY;
         timeSpent = 0;
 
         asteroidSpheres.forEach(function(a) {
@@ -207,7 +223,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     Game.prototype.pause = function() {
         stopAnimation();
-        stopGeneratingAsteroids();
+        stopIntervals();
         stopVelocityIncreasing();
     };
 
@@ -242,7 +258,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         requestId = requestAnimationFrame(this._bindedAnimate);
         this._render();
 
-
         asteroidSpheres.forEach(function (a) {
             a.position.z += currentVelocity;
         });
@@ -252,14 +267,14 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             var result = checker.checkObject(a);
             if (result == Checker.HIT) {
                 this._handleHit(a);
-                eventBus.dispatch('changeLives');
+                this.eventBus.dispatch('changeLives');
                 break;
             }
 
             if (result == Checker.HIT_BONUS) {
                 this.score += BONUS_SPHERE_PRICE;
                 removeSphere(a, i);
-                eventBus.dispatch('hitBonus');
+                this.eventBus.dispatch('hitBonus');
             }
 
             if (result == Checker.MISS) {
@@ -276,7 +291,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     Game.prototype.on = function(type, callback, scope) {
-        eventBus.addEventListener(type, callback, scope);
+        this.eventBus.addEventListener(type, callback, scope);
     };
 
     /**
@@ -289,11 +304,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     function  generateHeart() {
-        stopGeneratingAsteroids();
-        setTimeout(function () {
-            //startGeneratingAsteroids();
-            startGeneratingSimpleObjects();
-        }, 2000);
         return HeartsGenerator.getHeartArray();
     }
 
@@ -313,7 +323,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         stopIntervals();
         currentVelocity = -1;
         this._highlightHitAsteroid(hitAsteroid);
-        setTimeout(function() {
+        this.handleHitTimeout = setTimeout(function() {
             currentVelocity = 0.5;
             startVelocityIncreasing();
             startGeneratingSimpleObjects();
@@ -328,7 +338,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     function getSpiralCreationInterval() {
         return 10;
     }
-
     Game.prototype._render = function() {
         //this.effect.render(scene, camera);
         renderer.render(scene, camera);
