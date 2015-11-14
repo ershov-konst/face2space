@@ -38,14 +38,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         scene.add(sphere);
         asteroidSpheres.push(sphere);
     }
-
-    function createFigureWithGenerator( generator ) {
-        var newAsteroid = generator.getSpiral();
-        var sphere = getAsteroid(newAsteroid.radius);
-        sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
-        scene.add(sphere);
-        asteroidSpheres.push(sphere);
-    }
+    
     /**
      * The class that draws the scene and performs all basic operations of the game
      * @param $placeholder jQuery wrapped DOM element where the scene will be rendered
