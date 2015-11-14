@@ -24,15 +24,20 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         livesCount = 0,
         changeScoreInterval;
 
-    scoreForUser.find('input').bind('keydown', function(e){
-        // сохраняем имя
-
+    scoreForUser.find('input').bind('keydown', function(e) {
+        var user  = $(this).val();
+        mainDisplay.find('.startbutton').hide();
+        if (e.keyCode === 13) {
+            localStorage.setItem("username", user);
+            mainDisplay.find('.scoreuser').hide();
+            mainDisplay.find('.startbutton').show();
+            gameStatus = STATUS_STOPED;
+        }
     });
 
     var htracker = new HeadTracker.Tracker({ui: false, smoothing : false, fadeVideo : true});
     htracker.init(videoInput, canvasInput);
     htracker.start();
-
 
     function changeLives(i) {
         lives.empty();
@@ -51,10 +56,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         setTimeout(achievem.fadeOut(2000), 5000);
     }
 
-    function start(){
-
-    }
-
     var g;
     $(document).on('facetrackingEvent', function(e,k) {
         if (g != undefined && gameStatus == STATUS_STARTED) {
@@ -65,8 +66,45 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
     });
     $(document).on('headtrackrStatus', function (e) {
         var status = e.originalEvent.status;
+        mainDisplay.find('.startbutton').hide();
         if ( status == 'found' ) {
             faceFounded = true;
+            mainDisplay.find('.startbutton').show();
+            $(document).on('headtrackrStatus', function (e) {
+                var status = e.originalEvent.status;
+                mainDisplay.find('.startbutton').hide();
+                if ( status == 'found' ) {
+                    faceFounded = true;
+                    mainDisplay.find('.startbutton').show();
+                    if (g != undefined && gameStatus == STATUS_PAUSED ) {
+                        gameStatus = STATUS_STARTED;
+                        g.resume();
+                    }
+                }
+                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                    g.pause();
+                    gameStatus = STATUS_PAUSED;
+                    faceFounded = false;
+                }
+            });
+            $(document).on('headtrackrStatus', function (e) {
+                var status = e.originalEvent.status;
+                mainDisplay.find('.startbutton').hide();
+                if ( status == 'found' ) {
+                    faceFounded = true;
+                    mainDisplay.find('.startbutton').show();
+                    spacePress();
+                    if (g != undefined && gameStatus == STATUS_PAUSED ) {
+                        gameStatus = STATUS_STARTED;
+                        g.resume();
+                    }
+                }
+                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                    g.pause();
+                    gameStatus = STATUS_PAUSED;
+                    faceFounded = false;
+                }
+            });
             if (g != undefined && gameStatus == STATUS_PAUSED ) {
                 gameStatus = STATUS_STARTED;
                 g.resume();
@@ -78,60 +116,63 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             faceFounded = false;
         }
     });
-    $(document).on('keydown', function (e) {
-        if (e.keyCode === 32  && faceFounded && gameStatus != STATUS_ENTER_YOUR_NAME) {
 
-            //Обработка пробела
+    function spacePress() {
+        //Обработка пробела
 
-            if (gameStatus == STATUS_STOPED ) {
+        if (gameStatus == STATUS_STOPED) {
+            forRender.empty();
+            g = new Game(forRender);
+            livesCount = 3;
+            changeLives(livesCount);
+            mainDisplay.hide();
+            gameDisplay.show();
+            scoreForUser.hide();
 
-                g = new Game(forRender);
-                livesCount = 3;
+            g.start();
+            g.on('changeLives', function () {
+                livesCount--;
+
                 changeLives(livesCount);
-                mainDisplay.hide();
-                gameDisplay.show();
-                scoreForUser.hide();
+                if (livesCount == 0) {
+                    clearInterval(changeScoreInterval);
+                    g.stop();
+                    gameStatus = STATUS_ENTER_YOUR_NAME;
+                    gameDisplay.hide();
+                    mainDisplay.show();
+                    mainDisplay.find('.startbutton').hide();
+                    scoreForUser.show();
+                    scoreForUser.find('.totalscore')
+                        .html(g.getScore());
+                    scoreForUser.find('input').focus();
 
-                g.start();
-                g.on('changeLives', function () {
-                    livesCount--;
-                    changeLives(livesCount);
-                    if (livesCount == 0) {
-                        clearInterval(changeScoreInterval);
-                        g.stop();
-                        gameStatus = STATUS_ENTER_YOUR_NAME;
-                        gameDisplay.hide();
-                        mainDisplay.show();
-                        scoreForUser.show();
-                        scoreForUser.find('.totalscore')
-                            .html(g.getScore());
-                        scoreForUser.find('input').focus();
-                    }
-                });
+                }
+            });
 
-                g.on('hitBonus', function() {
-                    console.log('BONUS!');
-                });
+            changeScoreInterval = setInterval(function () {
+                if (gameStatus == STATUS_STARTED){
+                    changeScore(g.getScore());
+                }
+            }, 1000 / 10);
 
-                setInterval(function () {
-                    if (gameStatus == STATUS_STARTED)
-                        changeScore(g.getScore());
-                }, 1000 / 10);
+            gameStatus = STATUS_STARTED;
 
-                gameStatus = STATUS_STARTED;
-
-            }
-            else if (gameStatus == STATUS_STARTED) {
-                g.pause();
-                gameStatus = STATUS_PAUSED;
-            }
-            else {
-                gameStatus = STATUS_STARTED;
-                g.resume();
-            }
+        }
+        else if (gameStatus == STATUS_STARTED) {
+            g.pause();
+            gameStatus = STATUS_PAUSED;
+        }
+        else {
+            gameStatus = STATUS_STARTED;
+            g.resume();
         }
 
-    });
+    }
 
+    $(document).on('keydown', function (e) {
+        if (e.keyCode === 32 && faceFounded && gameStatus != STATUS_ENTER_YOUR_NAME) {
+            spacePress();
+        }
+    });
     mainDisplay.show();
 });
