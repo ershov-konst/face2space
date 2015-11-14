@@ -100,7 +100,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             return 0;
 
         if (Math.floor(time / velocityIncreasingIntervalLength) % 2 == 1)
-            return 0.3;
+            return 0.25;
 
         return 0;
     }
