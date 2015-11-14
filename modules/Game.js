@@ -12,7 +12,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var BONUS_SPHERE_PRICE = 100;
     var currentVelocity = INITIAL_VELOCITY;
     var timeSpent = 0;
-    var velocityIncreasingIntervalLength = 10;
+    var velocityIncreasingIntervalLength = 5;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 5, FAR = 200;
@@ -81,7 +81,13 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     function startVelocityIncreasing() {
         timeSpentInterval = setInterval(function () {
             timeSpent++;
-            currentVelocity += getVelocityDelta(timeSpent);
+            var delta = getVelocityDelta(timeSpent);
+            currentVelocity += delta;
+            if (delta != 0) {
+                stopGeneratingAsteroids();
+                startGeneratingAsteroids();
+            }
+
         }, 1000);
     }
 
@@ -90,11 +96,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function getVelocityDelta(time) {
-        if (time > 100)
+        if (time > 200)
             return 0;
 
         if (Math.floor(time / velocityIncreasingIntervalLength) % 2 == 1)
-            return 0.05;
+            return 0.3;
 
         return 0;
     }
@@ -240,7 +246,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     function getAsteroidCreationInterval() {
-        return 500;
+        var int = 500 / currentVelocity / 1.2;
+        if (int < 50)
+            return 50;
+        else
+            return int;
     }
 
     return Game;
