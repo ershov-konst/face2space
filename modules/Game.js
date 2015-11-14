@@ -3,7 +3,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     var renderer,
         scene,
         camera,
-        checker;
+        checker,
+        eventBus = new EventBus();
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
@@ -74,6 +75,10 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         Game.prototype._animate();
     };
 
+    Game.prototype.getScore = function() {
+        return 0;
+    };
+
     Game.prototype._animate = function() {
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
@@ -89,12 +94,16 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
                 scene.remove(a);
 
                 if (result == Checker.HIT) {
-                    // TODO: emit 'changeLives'
+                    eventBus.dispatch('changeLives');
                 }
             }
         }
 
         moveCamera();
+    };
+
+    Game.prototype.on = function(type, callback, scope) {
+        eventBus.addEventListener(type, callback, scope);
     };
 
     /**
