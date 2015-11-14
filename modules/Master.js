@@ -94,12 +94,15 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         mainDisplay.find('.startbutton').hide();
         if ( status == 'found' ) {
             faceFounded = true;
+            mainDisplay.find('.facestart').hide();
             mainDisplay.find('.startbutton').show();
             $(document).on('headtrackrStatus', function (e) {
                 var status = e.originalEvent.status;
                 mainDisplay.find('.startbutton').hide();
+                mainDisplay.find('.facestart').show();
                 if ( status == 'found' ) {
                     faceFounded = true;
+                    mainDisplay.find('.facestart').hide();
                     mainDisplay.find('.startbutton').show();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
@@ -117,8 +120,10 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             $(document).on('headtrackrStatus', function (e) {
                 var status = e.originalEvent.status;
                 mainDisplay.find('.startbutton').hide();
+                mainDisplay.find('.facestart').show();
                 if ( status == 'found' ) {
                     faceFounded = true;
+                    mainDisplay.find('.facestart').hide();
                     mainDisplay.find('.startbutton').show();
                     spacePress();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
