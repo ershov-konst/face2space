@@ -116,6 +116,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             startGeneratingAsteroids();
             currentVelocity = INITIAL_VELOCITY;
             startVelocityIncreasing();
+            this.score = 0;
         }
     };
 
@@ -152,7 +153,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     Game.prototype.getScore = function() {
-        return 0;
+        this.score += currentVelocity;
+        return this.score;
     };
 
     Game.prototype._animate = function() {

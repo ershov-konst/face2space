@@ -59,7 +59,8 @@ define(['jquery', 'Game'], function ($, Game) {
                 });
 
                 setInterval(function () {
-                    changeScore(g.getScore());
+                    if (gameStatus == STATUS_STARTED)
+                        changeScore(Math.floor(g.getScore()));
                 }, 1000 / 10);
 
                 gameStatus = STATUS_STARTED;
