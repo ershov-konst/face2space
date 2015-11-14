@@ -22,7 +22,9 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         faceFounded = false,
         scoreForUser = mainDisplay.find('.scoreuser'),
         livesCount = 0,
-        changeScoreInterval;
+        changeScoreInterval,
+        musicMenu = document.getElementById('music-menu'),
+        musicGame = document.getElementById('music-game');
 
     scoreForUser.find('input').bind('keydown', function(e) {
         var user  = $(this).val();
@@ -121,6 +123,9 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         //Обработка пробела
 
         if (gameStatus == STATUS_STOPED) {
+            musicMenu.pause();
+            musicMenu.duration = 0;
+            musicGame.play();
             forRender.empty();
             g = new Game(forRender);
             livesCount = 3;
@@ -146,6 +151,9 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                         .html(g.getScore());
                     scoreForUser.find('input').focus();
 
+                    musicGame.pause();
+                    musicGame.duration = 0;
+                    musicMenu.play();
                 }
             });
 
@@ -175,4 +183,5 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         }
     });
     mainDisplay.show();
+    musicMenu.play();
 });
