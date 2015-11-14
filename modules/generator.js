@@ -52,11 +52,13 @@ define(function(){
     Generator.prototype.getHeartArray = function () {
         //создаем туннель
         var objectsArr = [];
-        var coef = 3;
+        var coef = Math.floor(Math.random() * 4  + 1);
+        var randX = Math.floor(Math.random() * (this.x1/4  - this.x0/4 + 1) + this.x0/4);
+        var randY = Math.floor(Math.random() * (this.y1/4  - this.y0/4 + 1) + this.y0/4);
         for ( var angle = 0; angle < 2 * Math.PI ; angle += Math.PI / 24 ) {
             objectsArr.push({
-                positionX : coef * 16 * Math.pow( Math.sin( angle ), 3 ),
-                positionY : coef * (13 * Math.cos( angle ) - 5 * Math.cos( 2 * angle) - 2 * Math.cos( 3 * angle) - Math.cos( 4 * angle)),
+                positionX : coef * 16 * Math.pow( Math.sin( angle ), 3 ) + randX,
+                positionY : coef * (13 * Math.cos( angle ) - 5 * Math.cos( 2 * angle) - 2 * Math.cos( 3 * angle) - Math.cos( 4 * angle)) + randY,
                 positionZ : 0,
                 radius : 1,
                 type : "circle",
