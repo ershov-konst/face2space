@@ -45,7 +45,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         }
 
         generateSimpleObjects = setInterval(function () {
-            console.log("timer_1 " + timer_1 );
+            //console.log("timer_1 " + timer_1 );
             createAsteroidWithGenerator(generator1);
             createAsteroidWithGenerator(generator2);
             timer_1 ++;
@@ -63,7 +63,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         }
 
         generateSpiral = setInterval(function () {
-            console.log("timer_2 " + timer_2 );
+           // console.log("timer_2 " + timer_2 );
             createSpiralWithGenerator(generator2);
             timer_2 ++;
             if ( timer_2 == tr2  ) {
@@ -109,6 +109,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      */
     function Game($placeholder) {
         this.handleHitTimeout;
+        this.invincibilityTimeout = null;
+        this.invincibility = false;
         this.eventBus = new EventBus();
 
         scene = new Three.Scene();
@@ -199,6 +201,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype.start = function() {
         if (!requestId) {
             this._animate();
+            clearTimeout(this.invincibilityTimeout);
             //startGeneratingAsteroids();
             startGeneratingSimpleObjects();
             currentVelocity = INITIAL_VELOCITY;
@@ -238,6 +241,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         //     asteroidSpheres.push(sphere);
         // });
         startGeneratingSimpleObjects();
+        startVelocityIncreasing();
         this._animate();
     };
 
@@ -266,8 +270,17 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             var a = asteroidSpheres[i];
             var result = checker.checkObject(a);
             if (result == Checker.HIT) {
-                this._handleHit(a);
-                this.eventBus.dispatch('changeLives');
+                console.log('HIT');
+                if (!this.invincibility) {
+                    this.invincibility = true;
+                    this.eventBus.dispatch('changeLives');
+                    this._handleHit(a);
+                    var _this = this;
+                    this.invincibilityTimeout = setTimeout(function() {
+                        _this.invincibility = false;
+                    }, 1000);
+                }
+
                 break;
             }
 
