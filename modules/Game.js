@@ -7,9 +7,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         eventBus = new EventBus();
 
     var requestId; // for requestAnimationFrame()
-    var createAsteroidInterval, velocityIncreasingInterval;
+    var createAsteroidInterval, timeSpentInterval;
     var INITIAL_VELOCITY = 0.5;
     var currentVelocity = INITIAL_VELOCITY;
+    var timeSpent = 0;
+    var velocityIncreasingIntervalLength = 10;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
@@ -78,13 +80,24 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function startVelocityIncreasing() {
-        velocityIncreasingInterval = setInterval(function() {
-            currentVelocity += 0.3;
-        }, 2000)
+        timeSpentInterval = setInterval(function () {
+            timeSpent++;
+            currentVelocity += getVelocityDelta(timeSpent);
+        }, 1000);
     }
 
     function stopVelocityIncreasing() {
-        clearInterval(velocityIncreasingInterval);
+        clearInterval(timeSpentInterval);
+    }
+
+    function getVelocityDelta(time) {
+        if (time > 100)
+            return 0;
+
+        if (Math.floor(time / velocityIncreasingIntervalLength) % 2 == 1)
+            return 0.05;
+
+        return 0;
     }
 
     function getAsteroid(radius) {
@@ -111,6 +124,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         stopGeneratingAsteroids();
         stopVelocityIncreasing();
         currentVelocity = 0;
+        timeSpent = 0;
 
         asteroidSpheres.forEach(function(a) {
             scene.remove(a);
@@ -198,7 +212,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function getAsteroidCreationInterval() {
         return 500;
-    };
+    }
 
     return Game;
 });
