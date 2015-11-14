@@ -54,7 +54,7 @@ define(['jquery', 'Game'], function ($, Game) {
 
                     changeLives(livesCount);
                     if (livesCount == 0){
-                        g.stop();
+                        /*g.stop();*/
                     }
                 });
 

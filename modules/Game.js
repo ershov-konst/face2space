@@ -89,7 +89,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      */
     Game.prototype.start = function() {
         if (!requestId)
-            Game.prototype._animate();
+            this._animate();
     };
 
     Game.prototype.stop = function() {
@@ -107,7 +107,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     Game.prototype.resume = function() {
         startGeneratingAsteroids();
-        Game.prototype._animate();
+        this._animate();
     };
 
     function stopAnimation() {
@@ -123,7 +123,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     Game.prototype._animate = function() {
-        requestAnimationFrame(this._bindedAnimate);
+        requestId = requestAnimationFrame(this._bindedAnimate);
         this._render();
 
         asteroidSpheres.forEach(function (a) {
