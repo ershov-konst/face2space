@@ -16,9 +16,12 @@ define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
         achievem = gameDisplay.find('.achievemgame'),
         videoInput = document.getElementById('inputVideo'),
         canvasInput = document.getElementById('inputCanvas'),
+        canvasHeight = canvasInput.height,
+        canvasWidth  = canvasInput.width,
         faceFounded = false,
         livesCount = 0;
-    var htracker = new HeadTracker.Tracker({ui: false});
+
+    var htracker = new HeadTracker.Tracker({ui: false, detectionInterval: 50});
     htracker.init(videoInput, canvasInput);
     htracker.start();
 
@@ -41,14 +44,12 @@ define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
     }
 
     var g;
-    $(document).on('headtrackingEvent', function(e,k) {
+    $(document).on('facetrackingEvent', function(e,k) {
         if (g != undefined && gameStatus == STATUS_STARTED) {
-            var x = Math.ceil((e.originalEvent.x)*100)/100;
-            var y = Math.ceil((e.originalEvent.y)*100)/100;
-            var z = Math.ceil((e.originalEvent.z)*100)/100;
+            var x = - (e.originalEvent.x - canvasWidth/2) * 0.1;
+            var y = - (e.originalEvent.y - canvasHeight/2) * 0.1;
             g.headMoved(x, y);
         }
-        // console.log(x + " - " + y);
     });
     $(document).on('headtrackrStatus', function (e) {
         var status = e.originalEvent.status;
@@ -64,7 +65,7 @@ define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
             gameStatus = STATUS_PAUSED;
             faceFounded = false;
         }
-    })
+    });
     $(document).on('keydown', function (e) {
         if (e.keyCode === 32  && faceFounded) {
 

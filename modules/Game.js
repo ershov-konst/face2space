@@ -182,11 +182,16 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     // TODO: logic of velocity changing
     function getVelocity() {
         return 1;
-    };
+    }
 
     function getAsteroidCreationInterval() {
+<<<<<<< HEAD
         return 10;
     };
+=======
+        return 500;
+    }
+>>>>>>> a1a654d649e9d8c158f87e351a9b5598056bbc83
 
     return Game;
 });
