@@ -1,4 +1,4 @@
-define(['three', 'EventBus', 'generator'], function(Three, EventBus, Generator){
+define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, Generator, Checker){
 
     var renderer,
         scene,
@@ -10,7 +10,7 @@ define(['three', 'EventBus', 'generator'], function(Three, EventBus, Generator){
     var cameraVectorOfView = new Three.Vector3(5000, 5000, 0);
 
     var generator = new Generator(0, 10000, 0, 10000);
-
+    //var checker = new Checker();
     var asteroidSpheres = [];
 
     setInterval(function() {
@@ -29,7 +29,13 @@ define(['three', 'EventBus', 'generator'], function(Three, EventBus, Generator){
         scene = new Three.Scene();
         var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
         var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 12000;
-
+        var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
+        var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
+        var test = new Three.Mesh(myPlane, material);
+        test.position.x = 5000;
+        test.position.y = 5000;
+        test.position.z = 9800;
+        scene.add(test);
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
         camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
@@ -64,10 +70,14 @@ define(['three', 'EventBus', 'generator'], function(Three, EventBus, Generator){
     Game.prototype._animate = function() {
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
+        asteroidSpheres.filter(function (curElem) {
 
-        asteroidSpheres.forEach(function(a) {
             a.position.z += getVelocity();
-            console.log(a.position.z);
+        })
+        asteroidSpheres.forEach(function(a) {
+
+
+// console.log(a.position.z);
         });
 
         moveCamera();
