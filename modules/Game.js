@@ -10,16 +10,20 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var createAsteroidInterval;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
+    var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 10, FAR = 200;
 
     var lastHeadPosition = { x: null, y: null };
     var initialCameraPosition = new Three.Vector3(0, 0, 200);
     var cameraVectorOfView = new Three.Vector3(0, 0, 0);
 
-    var generator = new Generator(-50*ASPECT, 50*ASPECT, -50, 50);
-    var CENTRAL_GENERATOR_RANGE = 10;
+
+    var CENTRAL_GENERATOR_RANGE = 15;
+    var OUTER_GENERATOR_RANGE = 70;
+
+    var generator = new Generator(-OUTER_GENERATOR_RANGE*ASPECT, OUTER_GENERATOR_RANGE*ASPECT, -OUTER_GENERATOR_RANGE, OUTER_GENERATOR_RANGE);
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
+    var HeartsGenerator = new Generator(0,0,0,0);
     var asteroidSpheres = [];
 
     function createAsteroidWithGenerator(generator) {
@@ -113,7 +117,15 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     Game.prototype.resume = function() {
-        startGeneratingAsteroids();
+        //startGeneratingAsteroids();
+        var heartArr = generateHeart();
+        heartArr.forEach(function (a) {
+            var newAsteroid = a;
+            var sphere = getAsteroid(newAsteroid.radius);
+            sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+            scene.add(sphere);
+            asteroidSpheres.push(sphere);
+        })
         this._animate();
     };
 
@@ -132,6 +144,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype._animate = function() {
         requestId = requestAnimationFrame(this._bindedAnimate);
         this._render();
+
+
         asteroidSpheres.forEach(function (a) {
             a.position.z += getVelocity();
         });
@@ -165,6 +179,14 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         lastHeadPosition.y = y;
     };
 
+    function  generateHeart() {
+        stopGeneratingAsteroids();
+        setTimeout(function () {
+            startGeneratingAsteroids();
+        }, 2000);
+        return HeartsGenerator.getHeartArray();
+    }
+
     function moveCamera() {
         if (!lastHeadPosition)
             return;
@@ -185,13 +207,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function getAsteroidCreationInterval() {
-<<<<<<< HEAD
         return 10;
-    };
-=======
-        return 500;
     }
->>>>>>> a1a654d649e9d8c158f87e351a9b5598056bbc83
 
     return Game;
 });
