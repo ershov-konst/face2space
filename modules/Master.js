@@ -14,7 +14,12 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
         lives       = gameDisplay.find('.lives');
 
     function changeLives(i){
-        $('<div class="live"></div>');
+        live = '<div class="live"><img src="img/live.png"></div>';
+
+        lives.empty();
+        for(var j=0; j < i; j++){
+            lives.append(live);
+        }
     }
 
 
@@ -34,12 +39,10 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
                 });
                 g.on('changeLives', function(lives){
                     changeLives(lives);
-                    //показываем финальный экран
                 });
 
                 setInterval(function () {
                     g.getScore();
-
                 }, 1000/10);
 
             }
