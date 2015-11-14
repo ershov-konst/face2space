@@ -1,4 +1,4 @@
-define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
+define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTracker, smoother) {
     //TODO тут все норм, пока это не трогаем
 
     var
@@ -21,7 +21,7 @@ define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
         faceFounded = false,
         livesCount = 0;
 
-    var htracker = new HeadTracker.Tracker({ui: false, detectionInterval: 50});
+    var htracker = new HeadTracker.Tracker({ui: false, smoothing : false, fadeVideo : true});
     htracker.init(videoInput, canvasInput);
     htracker.start();
 

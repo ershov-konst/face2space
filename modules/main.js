@@ -4,7 +4,8 @@ requirejs.config({
       'anaglyph': '../lib/anaglyph',
       'EventBus': '../lib/EventBus',
       'jquery': '../lib/jquery-2.1.4.min',
-      'HeadTracker': '../lib/headtrackr'
+      'HeadTracker': '../lib/headtrackr',
+      'smoother': '../lib/smoother'
    },
    shim: {
       anaglyph: {
