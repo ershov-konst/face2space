@@ -33,6 +33,8 @@ define(['jquery', 'Game'], function ($, Game) {
         setTimeout(achievem.fadeOut(2000), 5000);
     }
 
+    var g;
+
     $(document).on('keydown', function (e) {
         if (e.keyCode === 32) {
 
@@ -40,7 +42,7 @@ define(['jquery', 'Game'], function ($, Game) {
 
             if (gameStatus == STATUS_STOPED) {
 
-                var g = new Game(forRender);
+                g = new Game(forRender);
                 livesCount = 3;
                 changeLives(livesCount);
                 mainDisplay.hide();
@@ -60,6 +62,16 @@ define(['jquery', 'Game'], function ($, Game) {
                     changeScore(g.getScore());
                 }, 1000 / 10);
 
+                gameStatus = STATUS_STARTED;
+
+            }
+            else if (gameStatus == STATUS_STARTED) {
+                g.pause();
+                gameStatus = STATUS_PAUSED;
+            }
+            else {
+                gameStatus = STATUS_STARTED;
+                g.resume();
             }
         }
 

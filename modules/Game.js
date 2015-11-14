@@ -6,6 +6,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         checker,
         eventBus = new EventBus();
 
+    var requestId; // for requestAnimationFrame()
+    var createAsteroidInterval;
+
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
 
@@ -63,11 +66,15 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function startGeneratingAsteroids() {
-        setInterval(function() {
+        createAsteroidInterval =  setInterval(function() {
             createAsteroidWithGenerator(generator);
             createAsteroidWithGenerator(generator);
             createAsteroidWithGenerator(centralGenerator);
         }, getAsteroidCreationInterval());
+    }
+
+    function stopGeneratingAsteroids() {
+        clearInterval(createAsteroidInterval);
     }
 
     function getAsteroid(radius) {
@@ -81,8 +88,35 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      * Call this method to start animation
      */
     Game.prototype.start = function() {
-        this._animate();
+        if (!requestId)
+            Game.prototype._animate();
     };
+
+    Game.prototype.stop = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+        asteroidSpheres.forEach(function(a) {
+            scene.remove(a);
+        });
+    };
+
+    Game.prototype.pause = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+    };
+
+    Game.prototype.resume = function() {
+        startGeneratingAsteroids();
+        Game.prototype._animate();
+    };
+
+    function stopAnimation() {
+        if (requestId) {
+            //noinspection JSUnresolvedFunction
+            cancelAnimationFrame(requestId);
+            requestId = null;
+        }
+    }
 
     Game.prototype.getScore = function() {
         return 0;
