@@ -59,3 +59,32 @@ html, body{
     font-size: 100%;
     cursor: pointer;
 }
+.lives{
+    position: fixed;
+    top: 5%;
+    right: 90%;
+    display: flex;
+    overflow: auto;
+    font-family: 'Audiowide';
+    color: white;
+}
+.score{
+    font-size: 200%;
+    position: fixed;
+    top: 5%;
+    left: 85%;
+    display: flex;
+    overflow: auto;
+    font-family: 'Audiowide';
+    color: white;
+}
+.achievemgame{
+    font-size: 150%;
+    position: fixed;
+    bottom: 20%;
+    left: 35%;
+    display: flex;
+    overflow: auto;
+    font-family: 'Audiowide';
+    color: white;
+}
