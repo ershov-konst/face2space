@@ -7,7 +7,9 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         eventBus = new EventBus();
 
     var requestId; // for requestAnimationFrame()
-    var createAsteroidInterval;
+    var createAsteroidInterval, velocityIncreasingInterval;
+    var INITIAL_VELOCITY = 0.5;
+    var currentVelocity = INITIAL_VELOCITY;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
@@ -55,8 +57,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         renderer.render(scene, camera);
         checker = new Checker(camera);
 
-        startGeneratingAsteroids();
-
         $placeholder.append(renderer.domElement);
     }
 
@@ -72,6 +72,16 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         clearInterval(createAsteroidInterval);
     }
 
+    function startVelocityIncreasing() {
+        velocityIncreasingInterval = setInterval(function() {
+            currentVelocity += 0.3;
+        }, 2000)
+    }
+
+    function stopVelocityIncreasing() {
+        clearInterval(velocityIncreasingInterval);
+    }
+
     function getAsteroid(radius) {
         var sphereGeometry = new Three.SphereGeometry(radius, 20, 20);
         var sphereMaterial = new Three.MeshBasicMaterial({color: 0xFFFFFF});
@@ -83,13 +93,20 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      * Call this method to start animation
      */
     Game.prototype.start = function() {
-        if (!requestId)
+        if (!requestId) {
             Game.prototype._animate();
+            startGeneratingAsteroids();
+            currentVelocity = INITIAL_VELOCITY;
+            startVelocityIncreasing();
+        }
     };
 
     Game.prototype.stop = function() {
         stopAnimation();
         stopGeneratingAsteroids();
+        stopVelocityIncreasing();
+        currentVelocity = 0;
+
         asteroidSpheres.forEach(function(a) {
             scene.remove(a);
         });
@@ -98,10 +115,12 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     Game.prototype.pause = function() {
         stopAnimation();
         stopGeneratingAsteroids();
+        stopVelocityIncreasing();
     };
 
     Game.prototype.resume = function() {
         startGeneratingAsteroids();
+        startVelocityIncreasing();
         Game.prototype._animate();
     };
 
@@ -122,7 +141,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         Game.prototype._render();
 
         asteroidSpheres.forEach(function (a) {
-            a.position.z += getVelocity();
+            a.position.z += currentVelocity;
         });
 
         for (var i = 0; i < asteroidSpheres.length; i++) {
@@ -169,11 +188,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
 
     Game.prototype._render = function() {
         renderer.render(scene, camera);
-    };
-
-    // TODO: logic of velocity changing
-    function getVelocity() {
-        return 1;
     };
 
     function getAsteroidCreationInterval() {
