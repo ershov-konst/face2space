@@ -76,6 +76,10 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         Game.prototype._animate();
     };
 
+    Game.prototype.getScore = function() {
+        return 0;
+    };
+
     Game.prototype._animate = function() {
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
