@@ -1,4 +1,4 @@
-define(['three', 'EventBus'], function(Three, EventBus){
+define(['three', 'EventBus', 'generator'], function(Three, EventBus, Generator){
 
     var renderer,
         scene,
@@ -8,6 +8,18 @@ define(['three', 'EventBus'], function(Three, EventBus){
     var lastHeadPosition = { x: null, y: null };
     var initialCameraPosition = new Three.Vector3(5000, 5000, 10000);
     var cameraVectorOfView = new Three.Vector3(5000, 5000, 0);
+
+    var generator = new Generator(0, 10000, 0, 10000);
+
+    var asteroidSpheres = [];
+
+    setInterval(function() {
+        var newAsteroid = generator.getObject();
+        var sphere = getAsteroid(newAsteroid.radius);
+        sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+        scene.add(sphere);
+        asteroidSpheres.push(sphere);
+    }, getAsteroidCreationInterval());
 
     /**
      * The class that draws the scene and performs all basic operations of the game
@@ -35,6 +47,13 @@ define(['three', 'EventBus'], function(Three, EventBus){
         scene.add(asteroid);
     }
 
+    function getAsteroid(radius) {
+        var sphereGeometry = new Three.SphereGeometry(radius, 20, 20);
+        var sphereMaterial = new Three.MeshBasicMaterial({color: 0xFFFFFF});
+
+        return new Three.Mesh(sphereGeometry, sphereMaterial);
+    }
+
     /**
      * Call this method to start animation
      */
@@ -46,7 +65,11 @@ define(['three', 'EventBus'], function(Three, EventBus){
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
 
-        asteroid.position.z += getVelocity();
+        asteroidSpheres.forEach(function(a) {
+            a.position.z += getVelocity();
+            console.log(a.position.z);
+        });
+
         moveCamera();
     };
 
@@ -78,7 +101,11 @@ define(['three', 'EventBus'], function(Three, EventBus){
 
     // TODO: logic of velocity changing
     function getVelocity() {
-        return 10;
+        return 30;
+    };
+
+    function getAsteroidCreationInterval() {
+        return 500;
     };
 
     return Game;

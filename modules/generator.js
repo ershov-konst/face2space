@@ -12,7 +12,7 @@ define(function(){
         resObject.positionX = Math.floor(Math.random() * (this.x1  - this.x0 + 1) + this.x0);
         resObject.positionY = Math.floor(Math.random() * (this.y1  - this.y0 + 1) + this.y0);
         resObject.positionZ = 0;
-        resObject.radius = 10;
+        resObject.radius = 50;
         resObject.type = "sphere";
         return resObject;
     }
