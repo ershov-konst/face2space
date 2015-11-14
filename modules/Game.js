@@ -46,8 +46,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
 
-        renderer = new Three.WebGLRenderer({antialias: true});
-        renderer.setClearColor(0x2b2b2b);
+        renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
         renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         renderer.render(scene, camera);
