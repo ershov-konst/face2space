@@ -13,7 +13,7 @@ require(['three', 'EventBus'], function(tm, THREE, EventBus){
    console.log(EventBus);
     //пример использования
    //     x0 = 0;
-   //     x1 =  window.innerWidth + 1000;
+   //     x1 = window.innerWidth + 1000;
    //     y0 = 0;
    //     y1 = window.innerHeight + 1000;
    // var check = new Checker({positionX: window.innerWidth / 2, positionY: window.innerHeight / 2, positionZ: 0});
