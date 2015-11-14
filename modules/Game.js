@@ -15,7 +15,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var velocityIncreasingIntervalLength = 10;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
+    var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 10, FAR = 200;
 
     var lastHeadPosition = { x: null, y: null };
     var initialCameraPosition = new Three.Vector3(0, 0, 200);
@@ -23,7 +23,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     var generator1 = new Generator(-50*ASPECT, 50*ASPECT, -50, 50, true);
     var generator2 = new Generator(-50*ASPECT, 50*ASPECT, -50, 50);
-    var CENTRAL_GENERATOR_RANGE = 10;
+    var CENTRAL_GENERATOR_RANGE = 15;
+    var OUTER_GENERATOR_RANGE = 70;
+
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
     var asteroidSpheres = [];
@@ -43,12 +45,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      */
     function Game($placeholder) {
         scene = new Three.Scene();
-
         var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
-        camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
+        camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
 
         renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
@@ -152,7 +153,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     Game.prototype.getScore = function() {
         this.score += currentVelocity;
-        return this.score;
+        return Math.floor(this.score);
     };
 
     Game.prototype._animate = function() {
@@ -201,13 +202,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         if (!lastHeadPosition)
             return;
 
-        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * (-100);
-        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 10;
+        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * 1.5;
+        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 1.5;
 
-        camera.lookAt(new Three.Vector3(
-            cameraVectorOfView.x - lastHeadPosition.x * 30,
-            cameraVectorOfView.y - lastHeadPosition.y * 30
-        ));
     }
 
     Game.prototype._render = function() {

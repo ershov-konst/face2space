@@ -9,6 +9,12 @@
 
 <div id="root" class="container">
     <div class="background"></div>
+
+    <canvas id="inputCanvas" width="200" height="150" style="display:none;" ></canvas>
+    <video id="inputVideo" style="position: absolute" autoplay loop></video>
+    <div id="placeholder"></div>
+
+
     <div id="render" class="for-render"></div>
 
     <div class="main-display display">
@@ -16,6 +22,10 @@
         <div class="startbutton" id="space">Press 'Space' to start!</div>
         <div class="achievement"></div>
         <div class="pilot">Best Pilots</div>
+        <div class="scoreuser">
+            <div class="totalscore"></div>
+            <input id="username" type="text" maxlength="10" placeholder="Enter your name"/>
+        </div>
     </div>
     <div class="game-display display">
         <div class='lives'></div>

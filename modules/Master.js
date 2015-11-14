@@ -1,4 +1,4 @@
-define(['jquery', 'Game'], function ($, Game) {
+define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTracker, smoother) {
     //TODO тут все норм, пока это не трогаем
 
     var
@@ -14,7 +14,24 @@ define(['jquery', 'Game'], function ($, Game) {
         lives = gameDisplay.find('.lives'),
         scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
-        livesCount = 0;
+        videoInput = document.getElementById('inputVideo'),
+        canvasInput = document.getElementById('inputCanvas'),
+        canvasHeight = canvasInput.height,
+        canvasWidth  = canvasInput.width,
+        faceFounded = false,
+        scoreForUser = mainDisplay.find('.scoreuser'),
+        livesCount = 0,
+        changeScoreInterval;
+
+    scoreForUser.find('input').bind('keydown', function(e){
+        // сохраняем имя
+
+    });
+
+    var htracker = new HeadTracker.Tracker({ui: false, smoothing : false, fadeVideo : true});
+    htracker.init(videoInput, canvasInput);
+    htracker.start();
+
 
     function changeLives(i) {
         lives.empty();
@@ -33,20 +50,46 @@ define(['jquery', 'Game'], function ($, Game) {
         setTimeout(achievem.fadeOut(2000), 5000);
     }
 
-    var g;
+    function start(){
 
+    }
+
+    var g;
+    $(document).on('facetrackingEvent', function(e,k) {
+        if (g != undefined && gameStatus == STATUS_STARTED) {
+            var x = - (e.originalEvent.x - canvasWidth/2) * 0.1;
+            var y = - (e.originalEvent.y - canvasHeight/2) * 0.1;
+            g.headMoved(x, y);
+        }
+    });
+    $(document).on('headtrackrStatus', function (e) {
+        var status = e.originalEvent.status;
+        if ( status == 'found' ) {
+            faceFounded = true;
+            if (g != undefined && gameStatus == STATUS_PAUSED ) {
+                gameStatus = STATUS_STARTED;
+                g.resume();
+            }
+        }
+        else if (g != undefined && gameStatus == STATUS_STARTED) {
+            g.pause();
+            gameStatus = STATUS_PAUSED;
+            faceFounded = false;
+        }
+    });
     $(document).on('keydown', function (e) {
-        if (e.keyCode === 32) {
+        if (e.keyCode === 32  && faceFounded) {
 
             //Обработка пробела
 
-            if (gameStatus == STATUS_STOPED) {
+            if (gameStatus == STATUS_STOPED ) {
 
                 g = new Game(forRender);
                 livesCount = 3;
                 changeLives(livesCount);
                 mainDisplay.hide();
                 gameDisplay.show();
+                scoreForUser.hide();
 
                 g.start();
                 g.on('changeLives', function () {
@@ -54,7 +97,14 @@ define(['jquery', 'Game'], function ($, Game) {
 
                     changeLives(livesCount);
                     if (livesCount == 0){
-                        /*g.stop();*/
+                        clearInterval(changeScoreInterval);
+                        g.stop();
+                        gameDisplay.hide();
+                        mainDisplay.show();
+                        scoreForUser.show();
+                        scoreForUser.find('.totalscore')
+                            .html(g.getScore());
+                        scoreForUser.find('input').focus();
                     }
                 });
 
@@ -64,7 +114,7 @@ define(['jquery', 'Game'], function ($, Game) {
 
                 setInterval(function () {
                     if (gameStatus == STATUS_STARTED)
-                        changeScore(Math.floor(g.getScore()));
+                        changeScore(g.getScore());
                 }, 1000 / 10);
 
                 gameStatus = STATUS_STARTED;
