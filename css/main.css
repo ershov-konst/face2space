@@ -24,7 +24,7 @@ html, body {
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
-    font-size: 300%;
+    font-size: 600%;
 }
 
 .achievement {
@@ -46,25 +46,27 @@ html, body {
 }
 
 .startbutton {
-    position: fixed;
+    position: absolute;
     top: 60%;
-    left: 43%;
-    display: flex;
+    width: 100%;
+    text-align: center;
+    display: block;
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
-    font-size: 100%;
+    font-size: 200%;
 }
 
 .pilot {
-    position: fixed;
+    position: absolute;
     top: 80%;
-    left: 46%;
-    display: flex;
+    width: 100%;
+    text-align: center;
+    display: block;
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
-    font-size: 100%;
+    font-size: 250%;
     cursor: pointer;
 }
 
