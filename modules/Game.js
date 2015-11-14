@@ -1,4 +1,4 @@
-define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, Generator, Checker){
+define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three, EventBus, Generator, Checker){
 
     var renderer,
         scene,
@@ -54,7 +54,12 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
         renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        renderer.render(scene, camera);
+        this.effect = new THREE.AnaglyphEffect(renderer);
+        this.effect.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.effect.render(scene, camera);
+
+        this._bindedAnimate = this._animate.bind(this);
+
         checker = new Checker(camera);
 
         $placeholder.append(renderer.domElement);
@@ -94,7 +99,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      */
     Game.prototype.start = function() {
         if (!requestId) {
-            Game.prototype._animate();
+            this._animate();
             startGeneratingAsteroids();
             currentVelocity = INITIAL_VELOCITY;
             startVelocityIncreasing();
@@ -121,7 +126,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     Game.prototype.resume = function() {
         startGeneratingAsteroids();
         startVelocityIncreasing();
-        Game.prototype._animate();
+        this._animate();
     };
 
     function stopAnimation() {
@@ -137,8 +142,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     };
 
     Game.prototype._animate = function() {
-        requestId = requestAnimationFrame(Game.prototype._animate);
-        Game.prototype._render();
+        requestId = requestAnimationFrame(this._bindedAnimate);
+        this._render();
 
         asteroidSpheres.forEach(function (a) {
             a.position.z += currentVelocity;
@@ -187,7 +192,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     }
 
     Game.prototype._render = function() {
-        renderer.render(scene, camera);
+        this.effect.render(scene, camera);
+        //renderer.render(scene, camera);
     };
 
     function getAsteroidCreationInterval() {
