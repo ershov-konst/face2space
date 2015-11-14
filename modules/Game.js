@@ -38,7 +38,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      */
     function Game($placeholder) {
         scene = new Three.Scene();
-
         var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
         var test = new Three.Mesh(myPlane, material); // TODO: turn test plane into the hitbox
@@ -78,7 +77,60 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     Game.prototype._animate = function() {
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
-
         asteroidSpheres.forEach(function (a) {
             a.position.z += getVelocity();
         });
+
+        for (var i = 0; i < asteroidSpheres.length; i++) {
+            var a = asteroidSpheres[i];
+            var result = checker.checkObject(a);
+            if (result != Checker.FAR) {
+                asteroidSpheres.splice(i, 1);
+                scene.remove(a);
+
+                if (result == Checker.HIT) {
+                    // TODO: emit 'changeLives'
+                }
+            }
+        }
+
+        moveCamera();
+    };
+
+    /**
+     * Call it when the user moves their head.
+     * We've got a method, not event, here to avoid circular dependencies
+     */
+    Game.prototype.headMoved = function(x, y) {
+        lastHeadPosition.x = x;
+        lastHeadPosition.y = y;
+    };
+
+    function moveCamera() {
+        if (!lastHeadPosition)
+            return;
+
+        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * (-100);
+        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 10;
+
+        camera.lookAt(new Three.Vector3(
+            cameraVectorOfView.x - lastHeadPosition.x * 30,
+            cameraVectorOfView.y - lastHeadPosition.y * 30
+        ));
+    }
+
+    Game.prototype._render = function() {
+        renderer.render(scene, camera);
+    };
+
+    // TODO: logic of velocity changing
+    function getVelocity() {
+        return 1;
+    };
+
+    function getAsteroidCreationInterval() {
+        return 500;
+    };
+
+    return Game;
+});
