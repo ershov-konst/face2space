@@ -49,7 +49,7 @@ define(function(){
         //создаем туннель
         var objectsArr = [];
 
-        for ( var angle = 0; angle < 2 * Math.PI ; angle += Math.PI / 32 ) {
+        for ( var angle = 0; angle < 2 * Math.PI ; angle += Math.PI / 16 ) {
             objectsArr.push({
                 positionX : 16 * Math.pow( Math.sin( angle ), 3 ),
                 positionY : 13 * Math.cos( angle ) - 5 * Math.cos( 2 * angle) - 2 * Math.cos( 3 * angle) - Math.cos( 4 * angle),

@@ -146,7 +146,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     Game.prototype.resume = function() {
-<<<<<<< HEAD
         //startGeneratingAsteroids();
         var heartArr = generateHeart();
         heartArr.forEach(function (a) {
@@ -155,11 +154,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
             scene.add(sphere);
             asteroidSpheres.push(sphere);
-        })
-=======
-        startGeneratingAsteroids();
-        startVelocityIncreasing();
->>>>>>> origin/master
+        });
         this._animate();
     };
 
@@ -180,10 +175,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         requestId = requestAnimationFrame(this._bindedAnimate);
         this._render();
 
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
         asteroidSpheres.forEach(function (a) {
             a.position.z += currentVelocity;
         });
@@ -265,11 +257,10 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         a.material.color.setHex(0xFF0000);
     };
 
-<<<<<<< HEAD
     function getAsteroidCreationInterval() {
         return 10;
-=======
-
+    }
+    
     Game.prototype._render = function() {
         //this.effect.render(scene, camera);
         renderer.render(scene, camera);
@@ -277,7 +268,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function getAsteroidCreationInterval() {
         return 500;
->>>>>>> origin/master
     }
 
     return Game;
