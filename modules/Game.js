@@ -46,11 +46,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
         var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
-        var test = new Three.Mesh(myPlane, material); // TODO: turn test plane into the hitbox
-        /*test.position.x = 5000;
-        test.position.y = 5000;
-        test.position.z = 9900;
-        scene.add(test);*/
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
         camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
