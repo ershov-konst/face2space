@@ -145,28 +145,19 @@ html, body {
 
 .scoreuser{
     position: absolute;
-<<<<<<< HEAD
     top: 15%;
     width: 100%;
     text-align: center;
     display: none;
-=======
-    top: 25%;
-    width: 100%;
-    text-align: center;
-    display: block;
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
     font-size: 250%;
 }
-<<<<<<< HEAD
+
 .totalscore:before{
     content: 'Total score: ';
 }
-=======
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
 
 #username{
     border:0 solid red;
@@ -175,10 +166,6 @@ html, body {
     background: transparent;
     height: 50px;
     font-size: 36px;
-<<<<<<< HEAD
     outline: none;
     width: 350px;
-
-=======
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
 }

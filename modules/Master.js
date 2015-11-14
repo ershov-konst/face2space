@@ -14,7 +14,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         lives = gameDisplay.find('.lives'),
         scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
-<<<<<<< HEAD
         videoInput = document.getElementById('inputVideo'),
         canvasInput = document.getElementById('inputCanvas'),
         canvasHeight = canvasInput.height,
@@ -39,11 +38,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
     htracker.init(videoInput, canvasInput);
     htracker.start();
 
-=======
-        scoreForUser = mainDisplay.find('.scoreuser');
-        livesCount = 0;
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
-
     function changeLives(i) {
         lives.empty();
         for (var j = 0; j < i; j++) {
@@ -61,7 +55,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         setTimeout(achievem.fadeOut(2000), 5000);
     }
 
-<<<<<<< HEAD
     var g;
     $(document).on('facetrackingEvent', function(e,k) {
         if (g != undefined && gameStatus == STATUS_STARTED) {
@@ -128,27 +121,12 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             if (e.keyCode === 32 && faceFounded) {
 
                 //Обработка пробела
-=======
-    $(document).on('keydown', function (e) {
-        if (e.keyCode === 32) {
-
-            //Обработка пробела
-
-            if (gameStatus == STATUS_STOPED) {
-
-                var g = new Game(forRender);
-                livesCount = 3;
-                changeLives(livesCount);
-                mainDisplay.hide();
-                gameDisplay.show();
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
 
                 if (gameStatus == STATUS_STOPED) {
 
                     g = new Game(forRender);
                     livesCount = 3;
                     changeLives(livesCount);
-<<<<<<< HEAD
                     mainDisplay.hide();
                     gameDisplay.show();
                     scoreForUser.hide();
@@ -188,24 +166,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     g.resume();
                 }
             }
-=======
-                    if (livesCount == 0){
-                        g.stop();
-                        gameDisplay.hide();
-                        mainDisplay.show();
-                        mainDisplay.append('<div class="scoreuser"></div>');
-                        $('.scoreuser').html(g.getScore());
-                        $('.scoreuser').append('<input id="username" type=" WORD" maxlength="10">');
-                    }
-                });
-
-                setInterval(function () {
-                    changeScore(g.getScore());
-                }, 1000 / 10);
-
-            }
-        }
->>>>>>> 4667523a9e8957ee795ba387cb5ba359c7ad6475
 
         });
     }
