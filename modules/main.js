@@ -1,9 +1,15 @@
 requirejs.config({
    paths: {
       'three': '../lib/three',
+      'anaglyph': '../lib/anaglyph',
       'EventBus': '../lib/EventBus',
       'jquery': '../lib/jquery-2.1.4.min',
       'HeadTracker': '../lib/headtrackr'
+   },
+   shim: {
+      anaglyph: {
+         deps: ['three']
+      }
    }
 });
 

@@ -8,7 +8,7 @@ html, body {
 
 #root {
     height: 100%;
-    background: #000 url("../img/space.jpg");
+    background: #000;
     overflow: hidden;
 }
 
@@ -131,4 +131,12 @@ html, body {
     position: absolute;
     overflow: hidden;
     height: 100%;
+}
+.background{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background: #000 url("../img/space.jpg");
+    opacity: 0.5;
 }
