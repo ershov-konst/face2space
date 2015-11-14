@@ -30,15 +30,79 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var HeartsGenerator = new Generator(0,0,0,0);
     var asteroidSpheres = [];
 
-    function createAsteroidWithGenerator(generator) {
-        var newAsteroid = generator.getObject();
-        var sphere = getAsteroid(newAsteroid.radius, newAsteroid.isBonus);
-        sphere.isBonus = newAsteroid.isBonus;
-        sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
-        scene.add(sphere);
-        asteroidSpheres.push(sphere);
+    //время работы генераторов
+    // var const_t1_max = 12000,
+    //     const_t1_min = 9000;
+    var tr1 = 10;//"время" до запуска спирали
+    var tr2 = 7;//"время в спирали"
+    var timer_1 = 0;
+    var timer_2 = 0;
+    var generateSpiral, generateSimpleObjects;
+    function startGeneratingSimpleObjects() {
+        if (generateSimpleObjects) {
+            clearInterval(generateSimpleObjects);
+            generateSimpleObjects = null;
+        }
+
+        generateSimpleObjects = setInterval(function () {
+            console.log("timer_1 " + timer_1 );
+            createAsteroidWithGenerator(generator1);
+            createAsteroidWithGenerator(generator2);
+            timer_1 ++;
+            if ( timer_1 == tr1) {
+                clearInterval(generateSimpleObjects);
+                startGeneratingSpiral();
+            }
+        } , getAsteroidCreationInterval());
     }
-    
+
+    function startGeneratingSpiral() {
+        if (generateSpiral) {
+            clearInterval(generateSpiral);
+            generateSpiral = null;
+        }
+
+        generateSpiral = setInterval(function () {
+            console.log("timer_2 " + timer_2 );
+            createSpiralWithGenerator(generator2);
+            timer_2 ++;
+            if ( timer_2 == tr2  ) {
+                clearInterval(generateSimpleObjects);
+                startGeneratingSimpleObjects();
+            }
+        } , getSpiralCreationInterval());
+    }
+
+    function createAsteroidWithGenerator(generator) {
+        var newAsteroidsArr = generator.getObject();
+        newAsteroidsArr.forEach(function (newAsteroid) {
+            var sphere = getAsteroid(newAsteroid.radius, newAsteroid.isBonus);
+            sphere.isBonus = newAsteroid.isBonus;
+            sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+            scene.add(sphere);
+            asteroidSpheres.push(sphere);
+        });
+    }
+
+    function createSpiralWithGenerator(generator) {
+        var newAsteroidsArr = generator.getSpiral();
+        newAsteroidsArr.forEach(function (newAsteroid) {
+            var sphere = getAsteroid(newAsteroid.radius, newAsteroid.isBonus);
+            sphere.isBonus = newAsteroid.isBonus;
+            sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+            scene.add(sphere);
+            asteroidSpheres.push(sphere);
+        });
+    }
+
+    function stopIntervals(argument) {
+        clearInterval(generateSimpleObjects);
+        clearInterval(generateSpiral);
+        generateSimpleObjects = null;
+        generateSpiral = null;
+        timer_1 = 0;
+        timer_2 = 0;
+    }
     /**
      * The class that draws the scene and performs all basic operations of the game
      * @param $placeholder jQuery wrapped DOM element where the scene will be rendered
@@ -98,8 +162,10 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             var delta = getVelocityDelta(timeSpent);
             currentVelocity += delta;
             if (delta != 0) {
-                stopGeneratingAsteroids();
-                startGeneratingAsteroids();
+                //stopGeneratingAsteroids();
+                stopIntervals();
+                startGeneratingSimpleObjects();
+                //startGeneratingAsteroids();
             }
 
         }, 1000);
@@ -133,7 +199,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype.start = function() {
         if (!requestId) {
             this._animate();
-            startGeneratingAsteroids();
+            //startGeneratingAsteroids();
+            startGeneratingSimpleObjects();
             currentVelocity = INITIAL_VELOCITY;
             startVelocityIncreasing();
             this.score = 0;
@@ -156,21 +223,21 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     Game.prototype.pause = function() {
         stopAnimation();
-        stopGeneratingAsteroids();
+        stopIntervals();
         stopVelocityIncreasing();
     };
 
     Game.prototype.resume = function() {
         //startGeneratingAsteroids();
-        var heartArr = generateHeart();
-        /*heartArr.forEach(function (a) {
-            var newAsteroid = a;
-            var sphere = getAsteroid(newAsteroid.radius);
-            sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
-            scene.add(sphere);
-            asteroidSpheres.push(sphere);
-        });*/
-        startVelocityIncreasing();
+        // var heartArr = generateHeart();
+        // heartArr.forEach(function (a) {
+        //     var newAsteroid = a;
+        //     var sphere = getAsteroid(newAsteroid.radius);
+        //     sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+        //     scene.add(sphere);
+        //     asteroidSpheres.push(sphere);
+        // });
+        startGeneratingSimpleObjects();
         this._animate();
     };
 
@@ -201,6 +268,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             if (result == Checker.HIT) {
                 this._handleHit(a);
                 this.eventBus.dispatch('changeLives');
+                break;
             }
 
             if (result == Checker.HIT_BONUS) {
@@ -236,8 +304,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     function  generateHeart() {
-        stopGeneratingAsteroids();
-        startGeneratingAsteroids();
         return HeartsGenerator.getHeartArray();
     }
 
@@ -253,21 +319,25 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype._handleHit = function(hitAsteroid) {
         stopVelocityIncreasing();
         timeSpent = 0;
-        stopGeneratingAsteroids();
-
+        //stopGeneratingAsteroids();
+        stopIntervals();
         currentVelocity = -1;
         this._highlightHitAsteroid(hitAsteroid);
         this.handleHitTimeout = setTimeout(function() {
             currentVelocity = 0.5;
             startVelocityIncreasing();
-            startGeneratingAsteroids();
+            startGeneratingSimpleObjects();
+            //startGeneratingAsteroids();
         }, 1500);
     };
 
     Game.prototype._highlightHitAsteroid = function(a) {
         a.material.color.setHex(0xFF0000);
     };
-    
+
+    function getSpiralCreationInterval() {
+        return 10;
+    }
     Game.prototype._render = function() {
         //this.effect.render(scene, camera);
         renderer.render(scene, camera);
