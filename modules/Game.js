@@ -167,23 +167,31 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         for (var i = 0; i < asteroidSpheres.length; i++) {
             var a = asteroidSpheres[i];
             var result = checker.checkObject(a);
-            if (result != Checker.FAR) {
-                asteroidSpheres.splice(i, 1);
-                scene.remove(a);
+            if (result == Checker.HIT) {
+                console.log('HIT')
+                console.log(a);
+                this._handleHit(a);
+                eventBus.dispatch('changeLives');
+            }
 
-                if (result == Checker.HIT) {
-                    eventBus.dispatch('changeLives');
-                }
+            if (result == Checker.HIT_BONUS) {
+                this.score += BONUS_SPHERE_PRICE;
+                removeSphere(a, i);
+                eventBus.dispatch('hitBonus');
+            }
 
-                if (result == Checker.HIT_BONUS) {
-                    this.score += BONUS_SPHERE_PRICE;
-                    eventBus.dispatch('hitBonus');
-                }
+            if (result == Checker.MISS) {
+                removeSphere(a);
             }
         }
 
         moveCamera();
     };
+
+    function removeSphere(sphere, index) {
+        asteroidSpheres.splice(index, 1);
+        scene.remove(sphere);
+    }
 
     Game.prototype.on = function(type, callback, scope) {
         eventBus.addEventListener(type, callback, scope);
@@ -206,6 +214,25 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 1.5;
 
     }
+
+    Game.prototype._handleHit = function(hitAsteroid) {
+        stopVelocityIncreasing();
+        timeSpent = 0;
+        //stopGeneratingAsteroids();
+
+        currentVelocity = -1;
+        this._highlightHitAsteroid(hitAsteroid);
+        setTimeout(function() {
+            currentVelocity = 0.5;
+            startVelocityIncreasing();
+            //startGeneratingAsteroids();
+        }, 1500);
+    };
+
+    Game.prototype._highlightHitAsteroid = function(a) {
+        a.material.color.setHex(0xFF0000);
+    };
+
 
     Game.prototype._render = function() {
         this.effect.render(scene, camera);

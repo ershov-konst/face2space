@@ -15,7 +15,7 @@ define(function(){
         resObject.positionZ = 0;
         resObject.radius = 1;
         resObject.type = "sphere";
-        resObject.IsBonus =  Math.floor(Math.random() * 51) == 50 ? true : false;
+        resObject.isBonus =  Math.floor(Math.random() * 51) == 50 ? true : false;
         return resObject;
     }
     return Generator;
