@@ -23,6 +23,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         faceFounded = false,
         scoreForUser = mainDisplay.find('.scoreuser'),
         livesCount = 0,
+        unpausing = false,
         changeScoreInterval;
 
     scoreForUser.find('input').bind('keydown', function(e) {
@@ -51,9 +52,27 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         scoreElem.html(score);
     }
 
-    function showPasue(p) {
+    function showPause(p) {
         shpause.html(p);
         shpause.fadeIn('slow');
+    }
+
+    function unpause(){
+        if (!unpausing){
+            unpausing = true;
+            showAchiev(3);
+            setTimeout(function(){
+                showAchiev(2);
+                setTimeout(function(){
+                    showAchiev(1);
+                    setTimeout(function(){
+                        unpausing = false;
+                        showAchiev('GO!');
+                        g.resume();
+                    },1000)
+                },1000)
+            },1000)
+        }
     }
 
     function showAchiev(ach) {
@@ -84,13 +103,13 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     mainDisplay.find('.startbutton').show();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
-                        g.resume();
+                        unpause();
                         shpause.hide();
                     }
                 }
-                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
                     g.pause();
-                    showPasue('PAUSE');
+                    showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
                     faceFounded = false;
                 }
@@ -104,11 +123,11 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     spacePress();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
-                        g.resume();
+                        unpause();
                         shpause.hide();
                     }
                 }
-                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
                     g.pause();
                     showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
@@ -117,11 +136,11 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             });
             if (g != undefined && gameStatus == STATUS_PAUSED ) {
                 gameStatus = STATUS_STARTED;
-                g.resume();
+                unpause();
                 shpause.hide();
             }
         }
-        else if (g != undefined && gameStatus == STATUS_STARTED) {
+        else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
             g.pause();
             showPause('PAUSE');
             gameStatus = STATUS_PAUSED;
@@ -169,14 +188,14 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             gameStatus = STATUS_STARTED;
 
         }
-        else if (gameStatus == STATUS_STARTED) {
+        else if (gameStatus == STATUS_STARTED && !unpausing) {
             g.pause();
             gameStatus = STATUS_PAUSED;
-            showPasue('PAUSE');
+            showPause('PAUSE');
         }
         else {
             gameStatus = STATUS_STARTED;
-            g.resume();
+            unpause();
             shpause.hide();
         }
 
