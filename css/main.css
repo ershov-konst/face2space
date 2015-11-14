@@ -1,14 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Audiowide);
-html, body{
-   margin: 0;
-   padding: 0;
-   height: 100%;
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
-#root{
+
+#root {
     height: 100%;
     background: #000;
 }
-.appname{
+
+.appname {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -22,7 +25,8 @@ html, body{
     color: white;
     font-size: 300%;
 }
-.achievement{
+
+.achievement {
     width: 64px;
     height: 64px;
     position: absolute;
@@ -32,13 +36,15 @@ html, body{
     background: url("../img/achievement.png") no-repeat;
     background-size: cover;
 }
+
 @media (-webkit-min-device-pixel-ratio: 2) {
-    .achievement{
+    .achievement {
         background: url("../img/achievementx2.png") no-repeat;
         background-size: cover;
     }
 }
-.startbutton{
+
+.startbutton {
     position: fixed;
     top: 60%;
     left: 43%;
@@ -48,7 +54,8 @@ html, body{
     color: white;
     font-size: 100%;
 }
-.pilot{
+
+.pilot {
     position: fixed;
     top: 80%;
     left: 46%;
@@ -59,7 +66,8 @@ html, body{
     font-size: 100%;
     cursor: pointer;
 }
-.lives{
+
+.lives {
     position: absolute;
     top: 6%;
     left: 5%;
@@ -68,7 +76,8 @@ html, body{
     font-family: 'Audiowide';
     color: white;
 }
-.score{
+
+.score {
     font-size: 200%;
     position: fixed;
     top: 5%;
@@ -78,7 +87,8 @@ html, body{
     font-family: 'Audiowide';
     color: white;
 }
-.achievemgame{
+
+.achievemgame {
     font-size: 150%;
     position: fixed;
     bottom: 20%;
@@ -88,8 +98,10 @@ html, body{
     font-family: 'Audiowide';
     color: white;
 }
-.live{
+
+.live {
     height: 32px;
     width: 32px;
     background: url("../img/live.png") no-repeat;
+    margin-right: 10px;
 }

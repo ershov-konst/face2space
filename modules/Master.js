@@ -14,12 +14,14 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
         lives       = gameDisplay.find('.lives');
 
     function changeLives(i){
-        live = '<div class="live"><img src="img/live.png"></div>';
-
         lives.empty();
         for(var j=0; j < i; j++){
-            lives.append(live);
+            lives.append('<div class="live"></div>');
         }
+    }
+
+    function changeScore(score){
+
     }
 
 
@@ -42,7 +44,7 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
                 });
 
                 setInterval(function () {
-                    g.getScore();
+                    changeScore(g.getScore());
                 }, 1000/10);
 
             }
