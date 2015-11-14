@@ -12,7 +12,7 @@ define(['jquery', 'Game'], function ($, Game) {
         mainDisplay = $('.main-display'),
         gameDisplay = $('.game-display'),
         lives = gameDisplay.find('.lives'),
-        score = gameDisplay.find('.score'),
+        scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
         livesCount = 0;
 
@@ -24,7 +24,7 @@ define(['jquery', 'Game'], function ($, Game) {
     }
 
     function changeScore(score) {
-        score.html(score);
+        scoreElem.html(score);
     }
 
     function showAchiev(ach) {
@@ -38,7 +38,7 @@ define(['jquery', 'Game'], function ($, Game) {
 
             //Обработка пробела
 
-            if (STATUS_STOPED) {
+            if (gameStatus == STATUS_STOPED) {
 
                 var g = new Game(forRender);
                 livesCount = 3;
@@ -47,8 +47,13 @@ define(['jquery', 'Game'], function ($, Game) {
                 gameDisplay.show();
 
                 g.start();
-                g.on('changeLives', function (lives) {
-                    changeLives(lives);
+                g.on('changeLives', function () {
+                    livesCount--;
+
+                    changeLives(livesCount);
+                    if (livesCount == 0){
+                        g.stop();
+                    }
                 });
 
                 setInterval(function () {

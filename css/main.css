@@ -9,7 +9,7 @@ html, body {
 #root {
     height: 100%;
     background: #000 url("../img/space.jpg");
-
+    overflow: hidden;
 }
 
 .appname {
@@ -125,4 +125,9 @@ html, body {
     to {
         visibility: hidden;
     }
+}
+
+.for-render{
+    position: absolute;
+    overflow: hidden;
 }
