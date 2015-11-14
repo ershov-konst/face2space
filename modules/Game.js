@@ -19,12 +19,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
     var asteroidSpheres = [];
 
-    setInterval(function() {
-        createAsteroidWithGenerator(generator);
-        createAsteroidWithGenerator(generator);
-        createAsteroidWithGenerator(centralGenerator);
-    }, getAsteroidCreationInterval());
-
     function createAsteroidWithGenerator(generator) {
         var newAsteroid = generator.getObject();
         var sphere = getAsteroid(newAsteroid.radius);
@@ -59,7 +53,17 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         renderer.render(scene, camera);
         checker = new Checker(camera);
 
+        startGeneratingAsteroids();
+
         $placeholder.append(renderer.domElement);
+    }
+
+    function startGeneratingAsteroids() {
+        setInterval(function() {
+            createAsteroidWithGenerator(generator);
+            createAsteroidWithGenerator(generator);
+            createAsteroidWithGenerator(centralGenerator);
+        }, getAsteroidCreationInterval());
     }
 
     function getAsteroid(radius) {
