@@ -9,6 +9,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var requestId; // for requestAnimationFrame()
     var createAsteroidInterval, timeSpentInterval;
     var INITIAL_VELOCITY = 0.5;
+    var BONUS_SPHERE_PRICE = 100;
     var currentVelocity = INITIAL_VELOCITY;
     var timeSpent = 0;
     var velocityIncreasingIntervalLength = 10;
@@ -20,7 +21,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var initialCameraPosition = new Three.Vector3(0, 0, 200);
     var cameraVectorOfView = new Three.Vector3(0, 0, 0);
 
-    var generator = new Generator(-50*ASPECT, 50*ASPECT, -50, 50);
+    var generator1 = new Generator(-50*ASPECT, 50*ASPECT, -50, 50, true);
+    var generator2 = new Generator(-50*ASPECT, 50*ASPECT, -50, 50);
     var CENTRAL_GENERATOR_RANGE = 10;
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
@@ -28,7 +30,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function createAsteroidWithGenerator(generator) {
         var newAsteroid = generator.getObject();
-        var sphere = getAsteroid(newAsteroid.radius);
+        var sphere = getAsteroid(newAsteroid.radius, newAsteroid.isBonus);
+        sphere.isBonus = newAsteroid.isBonus;
         sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
         scene.add(sphere);
         asteroidSpheres.push(sphere);
@@ -69,8 +72,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function startGeneratingAsteroids() {
         createAsteroidInterval =  setInterval(function() {
-            createAsteroidWithGenerator(generator);
-            createAsteroidWithGenerator(generator);
+            createAsteroidWithGenerator(generator1);
+            createAsteroidWithGenerator(generator2);
             createAsteroidWithGenerator(centralGenerator);
         }, getAsteroidCreationInterval());
     }
@@ -100,9 +103,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         return 0;
     }
 
-    function getAsteroid(radius) {
+    function getAsteroid(radius, isBonus) {
         var sphereGeometry = new Three.SphereGeometry(radius, 20, 20);
-        var sphereMaterial = new Three.MeshBasicMaterial({color: 0xFFFFFF});
+        var sphereMaterial = new Three.MeshBasicMaterial( {color: isBonus ? 0xFFD000 : 0xFFFFFF} );
 
         return new Three.Mesh(sphereGeometry, sphereMaterial);
     }
@@ -174,6 +177,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
                 if (result == Checker.HIT) {
                     eventBus.dispatch('changeLives');
+                }
+
+                if (result == Checker.HIT_BONUS) {
+                    this.score += BONUS_SPHERE_PRICE;
+                    eventBus.dispatch('hitBonus');
                 }
             }
         }

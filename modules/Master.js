@@ -58,6 +58,10 @@ define(['jquery', 'Game'], function ($, Game) {
                     }
                 });
 
+                g.on('hitBonus', function() {
+                    console.log('BONUS!');
+                });
+
                 setInterval(function () {
                     if (gameStatus == STATUS_STARTED)
                         changeScore(Math.floor(g.getScore()));

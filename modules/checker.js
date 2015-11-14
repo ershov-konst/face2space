@@ -12,13 +12,17 @@ define(function(){
         var cameraY1 =  0.1 * Math.tan(vFOV / 2) * this.camera.position.z;
         if ( sceneObject.position.z < this.camera.position.z )
             return Checker.FAR; //недолет
-        else if (  sceneObject.position.x >= cameraX0 && sceneObject.position.x <= cameraX1 && sceneObject.position.y >= cameraY0 && sceneObject.position.y <= cameraY1 )
-                return Checker.HIT; // попадание
+        else if (  sceneObject.position.x >= cameraX0 && sceneObject.position.x <= cameraX1 && sceneObject.position.y >= cameraY0 && sceneObject.position.y <= cameraY1 ) {
+            if (sceneObject.isBonus)
+                return Checker.HIT_BONUS; // hit bonus
+            return Checker.HIT; // попадание
+        }
             else
                 return Checker.MISS; // мимо
     }
     Checker.HIT = 0;
     Checker.MISS = -1;
     Checker.FAR = 1;
+    Checker.HIT_BONUS = 2;
     return Checker;
 });
