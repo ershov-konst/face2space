@@ -57,8 +57,8 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
     var g;
     $(document).on('facetrackingEvent', function(e,k) {
         if (g != undefined && gameStatus == STATUS_STARTED) {
-            var x = - (e.originalEvent.x - canvasWidth/2) * 0.1;
-            var y = - (e.originalEvent.y - canvasHeight/2) * 0.1;
+            var x = - (e.originalEvent.x - canvasWidth/2) * 0.3;
+            var y = - (e.originalEvent.y - canvasHeight/2) * 0.4;
             g.headMoved(x, y);
         }
     });

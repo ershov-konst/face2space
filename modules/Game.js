@@ -15,7 +15,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var velocityIncreasingIntervalLength = 10;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 55, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 10, FAR = 200;
+    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 5, FAR = 200;
 
     var lastHeadPosition = { x: null, y: null };
     var initialCameraPosition = new Three.Vector3(0, 0, 200);
@@ -188,7 +188,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
             }
 
             if (result == Checker.MISS) {
-                removeSphere(a);
+                removeSphere(a, i);
             }
         }
 
@@ -225,14 +225,14 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype._handleHit = function(hitAsteroid) {
         stopVelocityIncreasing();
         timeSpent = 0;
-        //stopGeneratingAsteroids();
+        stopGeneratingAsteroids();
 
         currentVelocity = -1;
         this._highlightHitAsteroid(hitAsteroid);
         setTimeout(function() {
             currentVelocity = 0.5;
             startVelocityIncreasing();
-            //startGeneratingAsteroids();
+            startGeneratingAsteroids();
         }, 1500);
     };
 
@@ -242,12 +242,12 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
 
     Game.prototype._render = function() {
-        this.effect.render(scene, camera);
-        //renderer.render(scene, camera);
+        //this.effect.render(scene, camera);
+        renderer.render(scene, camera);
     };
 
     function getAsteroidCreationInterval() {
-        return 10;
+        return 500;
     }
 
     return Game;
