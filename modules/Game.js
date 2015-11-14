@@ -86,15 +86,13 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         for (var i = 0; i < asteroidSpheres.length; i++) {
             var a = asteroidSpheres[i];
             var result = checker.checkObject(a);
-            switch(result) {
-                case Checker.MISS:
-                    asteroidSpheres.splice(i, 1);
-                    console.log("MISS");
-                    break;
-                case Checker.HIT:
-                    //TODO: emit event 'lose'
-                    console.log('HIT'); // TODO: remove objects from the scene
-                    break;
+            if (result != Checker.FAR) {
+                asteroidSpheres.splice(i, 1);
+                scene.remove(a);
+
+                if (result == Checker.HIT) {
+                    // TODO: emit 'changeLives'
+                }
             }
         }
 
