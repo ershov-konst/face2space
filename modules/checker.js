@@ -4,7 +4,7 @@ define(function(){
     }
 
     Checker.prototype.checkObject = function (sceneObject) {
-        var vFOV = camera.fov * Math.PI / 180;
+        var vFOV = this.camera.fov * Math.PI / 180;
         var aspect = window.innerWidth / window.innerHeight;
         var cameraX0 = -0.1 * aspect * Math.tan(vFOV / 2) * this.camera.position.z;
         var cameraX1 =  0.1 * aspect * Math.tan(vFOV / 2) * this.camera.position.z;
