@@ -121,6 +121,7 @@ html, body {
         visibility: hidden;
     }
 }
+
 @-webkit-keyframes blink {
     to {
         visibility: hidden;
@@ -132,6 +133,7 @@ html, body {
     overflow: hidden;
     height: 100%;
 }
+
 .background{
     position: absolute;
     top: 0;
@@ -139,4 +141,16 @@ html, body {
     width: 100%;
     background: #000 url("../img/space.jpg");
     opacity: 0.5;
+}
+
+.scoreuser {
+    position: absolute;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    display: block;
+    overflow: auto;
+    font-family: 'Audiowide';
+    color: white;
+    font-size: 250%;
 }

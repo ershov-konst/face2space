@@ -14,6 +14,7 @@ define(['jquery', 'Game'], function ($, Game) {
         lives = gameDisplay.find('.lives'),
         scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
+        scoreForUser = mainDisplay.find('.scoreuser');
         livesCount = 0;
 
     function changeLives(i) {
@@ -53,6 +54,10 @@ define(['jquery', 'Game'], function ($, Game) {
                     changeLives(livesCount);
                     if (livesCount == 0){
                         g.stop();
+                        gameDisplay.hide();
+                        mianDisplay.show();
+                        mainDisplay.append('<div class="scoreuser"></div>');
+                        $('.scoreuser').html(score);
                     }
                 });
 
