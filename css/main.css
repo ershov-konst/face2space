@@ -154,6 +154,7 @@ html, body {
     color: white;
     font-size: 250%;
 }
+
 .totalscore:before{
     content: 'Total score: ';
 }
@@ -167,5 +168,4 @@ html, body {
     font-size: 36px;
     outline: none;
     width: 350px;
-
 }
