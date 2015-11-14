@@ -30,7 +30,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             localStorage.setItem("username", user);
            mainDisplay.find('.scoreuser').hide();
             //mainDisplay.find('.startbutton').show();
-            start();
+            spacePress();
         }
     });
 
@@ -92,7 +92,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                 if ( status == 'found' ) {
                     faceFounded = true;
                     mainDisplay.find('.startbutton').show();
-                    start();
+                    spacePress();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
                         g.resume();
@@ -116,60 +116,61 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         }
     });
 
-    function start() {
-        $(document).on('keydown', function (e) {
-            if (e.keyCode === 32 && faceFounded) {
+    function spacePress() {
+        //Обработка пробела
 
-                //Обработка пробела
+        if (gameStatus == STATUS_STOPED) {
 
-                if (gameStatus == STATUS_STOPED) {
+            g = new Game(forRender);
+            livesCount = 3;
+            changeLives(livesCount);
+            mainDisplay.hide();
+            gameDisplay.show();
+            scoreForUser.hide();
 
-                    g = new Game(forRender);
-                    livesCount = 3;
-                    changeLives(livesCount);
-                    mainDisplay.hide();
-                    gameDisplay.show();
-                    scoreForUser.hide();
+            g.start();
+            g.on('changeLives', function () {
+                livesCount--;
 
-                    g.start();
-                    g.on('changeLives', function () {
-                        livesCount--;
-
-                        changeLives(livesCount);
-                        if (livesCount == 0) {
-                            clearInterval(changeScoreInterval);
-                            g.stop();
-                            gameDisplay.hide();
-                            mainDisplay.show();
-                            mainDisplay.find('.startbutton').hide();
-                            scoreForUser.show();
-                            scoreForUser.find('.totalscore')
-                                .html(g.getScore());
-                            scoreForUser.find('input').focus();
-
-                        }
-                    });
-
-                    changeScoreInterval = setInterval(function () {
-                        changeScore(g.getScore());
-                    }, 1000 / 10);
-
-                    gameStatus = STATUS_STARTED;
+                changeLives(livesCount);
+                if (livesCount == 0) {
+                    clearInterval(changeScoreInterval);
+                    g.stop();
+                    gameDisplay.hide();
+                    mainDisplay.show();
+                    mainDisplay.find('.startbutton').hide();
+                    scoreForUser.show();
+                    scoreForUser.find('.totalscore')
+                        .html(g.getScore());
+                    scoreForUser.find('input').focus();
 
                 }
-                else if (gameStatus == STATUS_STARTED) {
-                    g.pause();
-                    gameStatus = STATUS_PAUSED;
-                }
-                else {
-                    gameStatus = STATUS_STARTED;
-                    g.resume();
-                }
-            }
+            });
 
-        });
+            changeScoreInterval = setInterval(function () {
+                if (gameStatus == STATUS_STARTED){
+                    changeScore(g.getScore());
+                }
+            }, 1000 / 10);
+
+            gameStatus = STATUS_STARTED;
+
+        }
+        else if (gameStatus == STATUS_STARTED) {
+            g.pause();
+            gameStatus = STATUS_PAUSED;
+        }
+        else {
+            gameStatus = STATUS_STARTED;
+            g.resume();
+        }
+
     }
 
-    start();
+    $(document).on('keydown', function (e) {
+        if (e.keyCode === 32 && faceFounded) {
+            spacePress();
+        }
+    });
     mainDisplay.show();
 });
