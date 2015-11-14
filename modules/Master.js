@@ -1,4 +1,4 @@
-define(['jquery', 'Game'], function ($, Game) {
+define(['jquery'/*, 'Game'*/], function ($, Game) {
     //TODO тут все норм, пока это не трогаем
 
     var
@@ -10,7 +10,15 @@ define(['jquery', 'Game'], function ($, Game) {
         gameStatus = STATUS_STOPED,
         forRender = $('#render'),
         mainDisplay = $('.main-display'),
-        gameDisplay = $('.game-display');
+        gameDisplay = $('.game-display'),
+        lives       = gameDisplay.find('.lives');
+
+    function changeLives(i){
+        $('<div class="live"></div>');
+    }
+
+
+    mainDisplay.hide();
 
     $(document).on('keydown', function (e) {
         if (e.keyCode === 32) {
@@ -24,9 +32,13 @@ define(['jquery', 'Game'], function ($, Game) {
                 g.on('lose', function(){
                     //показываем финальный экран
                 });
+                g.on('changeLives', function(lives){
+                    changeLives(lives);
+                    //показываем финальный экран
+                });
 
                 setInterval(function () {
-                    //g.getScore();
+                    g.getScore();
 
                 }, 1000/10);
 

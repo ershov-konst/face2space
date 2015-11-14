@@ -60,9 +60,9 @@ html, body{
     cursor: pointer;
 }
 .lives{
-    position: fixed;
-    top: 5%;
-    right: 90%;
+    position: absolute;
+    top: 6%;
+    left: 5%;
     display: flex;
     overflow: auto;
     font-family: 'Audiowide';
@@ -87,4 +87,9 @@ html, body{
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
+}
+.live{
+    height: 32px;
+    width: 32px;
+    background: url("../img/live.png") no-repeat;
 }
