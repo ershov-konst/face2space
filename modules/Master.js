@@ -11,7 +11,9 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
         forRender = $('#render'),
         mainDisplay = $('.main-display'),
         gameDisplay = $('.game-display'),
-        lives       = gameDisplay.find('.lives');
+        lives       = gameDisplay.find('.lives'),
+        score       = gameDisplay.find('.score');
+
 
     function changeLives(i){
         lives.empty();
@@ -21,7 +23,7 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
     }
 
     function changeScore(score){
-
+        score.html(score);
     }
 
 
