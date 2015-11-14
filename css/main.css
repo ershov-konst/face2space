@@ -59,6 +59,19 @@ html, body {
     -webkit-animation: blink 1.5s steps(2, start) infinite;
 }
 
+.facestart{
+position: absolute;
+top: 60%;
+width: 100%;
+text-align: center;
+display: block;
+overflow: auto;
+font-family: 'Audiowide';
+color: white;
+font-size: 200%;
+animation: blink 1.5s steps(2, start) infinite;
+-webkit-animation: blink 1.5s steps(2, start) infinite;
+}
 .pilot {
     position: absolute;
     top: 80%;
