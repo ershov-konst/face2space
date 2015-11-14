@@ -28,6 +28,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
+    var HeartsGenerator = new Generator(0,0,0,0);
     var asteroidSpheres = [];
 
     function createAsteroidWithGenerator(generator) {
@@ -144,8 +145,15 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     };
 
     Game.prototype.resume = function() {
-        startGeneratingAsteroids();
-        startVelocityIncreasing();
+        //startGeneratingAsteroids();
+        var heartArr = generateHeart();
+        heartArr.forEach(function (a) {
+            var newAsteroid = a;
+            var sphere = getAsteroid(newAsteroid.radius);
+            sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+            scene.add(sphere);
+            asteroidSpheres.push(sphere);
+        });
         this._animate();
     };
 
@@ -165,6 +173,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     Game.prototype._animate = function() {
         requestId = requestAnimationFrame(this._bindedAnimate);
         this._render();
+
 
         asteroidSpheres.forEach(function (a) {
             a.position.z += currentVelocity;
@@ -212,6 +221,14 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         lastHeadPosition.y = y;
     };
 
+    function  generateHeart() {
+        stopGeneratingAsteroids();
+        setTimeout(function () {
+            startGeneratingAsteroids();
+        }, 2000);
+        return HeartsGenerator.getHeartArray();
+    }
+
     function moveCamera() {
         if (!lastHeadPosition)
             return;
@@ -239,7 +256,10 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         a.material.color.setHex(0xFF0000);
     };
 
-
+    function getAsteroidCreationInterval() {
+        return 10;
+    }
+    
     Game.prototype._render = function() {
         //this.effect.render(scene, camera);
         renderer.render(scene, camera);

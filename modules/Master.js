@@ -4,7 +4,8 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
     var
         STATUS_STOPED = 0,
         STATUS_STARTED = 1,
-        STATUS_PAUSED = 2;
+        STATUS_PAUSED = 2,
+        STATUS_ENTER_YOUR_NAME = 3;
 
     var
         gameStatus = STATUS_STOPED,
@@ -136,6 +137,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                 if (livesCount == 0) {
                     clearInterval(changeScoreInterval);
                     g.stop();
+                    gameStatus = STATUS_ENTER_YOUR_NAME;
                     gameDisplay.hide();
                     mainDisplay.show();
                     mainDisplay.find('.startbutton').hide();
@@ -168,7 +170,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
     }
 
     $(document).on('keydown', function (e) {
-        if (e.keyCode === 32 && faceFounded) {
+        if (e.keyCode === 32 && faceFounded && gameStatus != STATUS_ENTER_YOUR_NAME) {
             spacePress();
         }
     });
