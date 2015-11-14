@@ -19,7 +19,14 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         canvasHeight = canvasInput.height,
         canvasWidth  = canvasInput.width,
         faceFounded = false,
-        livesCount = 0;
+        scoreForUser = mainDisplay.find('.scoreuser'),
+        livesCount = 0,
+        changeScoreInterval;
+
+    scoreForUser.find('input').bind('keydown', function(e){
+        // сохраняем имя
+
+    });
 
     var htracker = new HeadTracker.Tracker({ui: false, smoothing : false, fadeVideo : true});
     htracker.init(videoInput, canvasInput);
@@ -41,6 +48,10 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         achievem.html(ach);
         achievem.fadeIn('slow');
         setTimeout(achievem.fadeOut(2000), 5000);
+    }
+
+    function start(){
+
     }
 
     var g;
@@ -78,6 +89,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                 changeLives(livesCount);
                 mainDisplay.hide();
                 gameDisplay.show();
+                scoreForUser.hide();
 
                 g.start();
                 g.on('changeLives', function () {
@@ -85,11 +97,18 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
 
                     changeLives(livesCount);
                     if (livesCount == 0){
+                        clearInterval(changeScoreInterval);
                         g.stop();
+                        gameDisplay.hide();
+                        mainDisplay.show();
+                        scoreForUser.show();
+                        scoreForUser.find('.totalscore')
+                            .html(g.getScore());
+                        scoreForUser.find('input').focus();
                     }
                 });
 
-                setInterval(function () {
+                changeScoreInterval = setInterval(function () {
                     changeScore(g.getScore());
                 }, 1000 / 10);
 
