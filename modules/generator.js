@@ -18,7 +18,9 @@ define(function(){
         resObject.radius = 1;
         resObject.type = "sphere";
         resObject.isBonus =  Math.floor(Math.random() * 51) == 50 ? true : false;
-        return resObject;
+        var resultArr = [];
+        resultArr.push(resObject);
+        return resultArr;
     }
 
     Generator.prototype.getSpiral = function () {
@@ -42,17 +44,19 @@ define(function(){
         this.settings.step = this.settings.circleRadius < 10 ? 0.1 : this.settings.step;
         this.settings.step = this.settings.circleRadius > 40 ? -0.1 : this.settings.step;
         this.lastObject = newObject;
-        return this.lastObject;
+        var resultArr = [];
+        resultArr.push(this.lastObject);
+        return resultArr;
     }
 
     Generator.prototype.getHeartArray = function () {
         //создаем туннель
         var objectsArr = [];
-
-        for ( var angle = 0; angle < 2 * Math.PI ; angle += Math.PI / 16 ) {
+        var coef = 3;
+        for ( var angle = 0; angle < 2 * Math.PI ; angle += Math.PI / 24 ) {
             objectsArr.push({
-                positionX : 16 * Math.pow( Math.sin( angle ), 3 ),
-                positionY : 13 * Math.cos( angle ) - 5 * Math.cos( 2 * angle) - 2 * Math.cos( 3 * angle) - Math.cos( 4 * angle),
+                positionX : coef * 16 * Math.pow( Math.sin( angle ), 3 ),
+                positionY : coef * (13 * Math.cos( angle ) - 5 * Math.cos( 2 * angle) - 2 * Math.cos( 3 * angle) - Math.cos( 4 * angle)),
                 positionZ : 0,
                 radius : 1,
                 type : "circle",
