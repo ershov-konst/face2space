@@ -58,6 +58,7 @@ define(['jquery', 'Game'], function ($, Game) {
                         mainDisplay.show();
                         mainDisplay.append('<div class="scoreuser"></div>');
                         $('.scoreuser').html(g.getScore());
+                        $('.scoreuser').append('<input id="username" type=" WORD" maxlength="10">');
                     }
                 });
 

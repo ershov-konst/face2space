@@ -143,7 +143,7 @@ html, body {
     opacity: 0.5;
 }
 
-.scoreuser {
+.scoreuser{
     position: absolute;
     top: 25%;
     width: 100%;
@@ -153,4 +153,13 @@ html, body {
     font-family: 'Audiowide';
     color: white;
     font-size: 250%;
+}
+
+#username{
+    border:0 solid red;
+    font-family: 'Audiowide';
+    color: white;
+    background: transparent;
+    height: 50px;
+    font-size: 36px;
 }
