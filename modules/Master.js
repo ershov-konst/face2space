@@ -29,9 +29,9 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         mainDisplay.find('.startbutton').hide();
         if (e.keyCode === 13) {
             localStorage.setItem("username", user);
-           mainDisplay.find('.scoreuser').hide();
-            //mainDisplay.find('.startbutton').show();
-            spacePress();
+            mainDisplay.find('.scoreuser').hide();
+            mainDisplay.find('.startbutton').show();
+            gameStatus = STATUS_STOPED;
         }
     });
 
@@ -121,7 +121,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         //Обработка пробела
 
         if (gameStatus == STATUS_STOPED) {
-
+            forRender.empty();
             g = new Game(forRender);
             livesCount = 3;
             changeLives(livesCount);
