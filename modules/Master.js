@@ -1,4 +1,4 @@
-define(['jquery', 'Game'], function ($, Game) {
+define(['jquery', 'Game', 'HeadTracker'], function ($, Game, HeadTracker) {
     //TODO тут все норм, пока это не трогаем
 
     var
@@ -14,7 +14,17 @@ define(['jquery', 'Game'], function ($, Game) {
         lives = gameDisplay.find('.lives'),
         scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
+        videoInput = document.getElementById('inputVideo'),
+        canvasInput = document.getElementById('inputCanvas'),
+        canvasHeight = canvasInput.height,
+        canvasWidth  = canvasInput.width,
+        faceFounded = false,
         livesCount = 0;
+
+    var htracker = new HeadTracker.Tracker({ui: false, detectionInterval: 50});
+    htracker.init(videoInput, canvasInput);
+    htracker.start();
+
 
     function changeLives(i) {
         lives.empty();
@@ -34,13 +44,34 @@ define(['jquery', 'Game'], function ($, Game) {
     }
 
     var g;
-
+    $(document).on('facetrackingEvent', function(e,k) {
+        if (g != undefined && gameStatus == STATUS_STARTED) {
+            var x = - (e.originalEvent.x - canvasWidth/2) * 0.1;
+            var y = - (e.originalEvent.y - canvasHeight/2) * 0.1;
+            g.headMoved(x, y);
+        }
+    });
+    $(document).on('headtrackrStatus', function (e) {
+        var status = e.originalEvent.status;
+        if ( status == 'found' ) {
+            faceFounded = true;
+            if (g != undefined && gameStatus == STATUS_PAUSED ) {
+                gameStatus = STATUS_STARTED;
+                g.resume();
+            }
+        }
+        else if (g != undefined && gameStatus == STATUS_STARTED) {
+            g.pause();
+            gameStatus = STATUS_PAUSED;
+            faceFounded = false;
+        }
+    });
     $(document).on('keydown', function (e) {
-        if (e.keyCode === 32) {
+        if (e.keyCode === 32  && faceFounded) {
 
             //Обработка пробела
 
-            if (gameStatus == STATUS_STOPED) {
+            if (gameStatus == STATUS_STOPED ) {
 
                 g = new Game(forRender);
                 livesCount = 3;
@@ -54,7 +85,7 @@ define(['jquery', 'Game'], function ($, Game) {
 
                     changeLives(livesCount);
                     if (livesCount == 0){
-                        /*g.stop();*/
+                        //g.stop();
                     }
                 });
 

@@ -36,7 +36,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
      */
     function Game($placeholder) {
         scene = new Three.Scene();
-
         var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
         var test = new Three.Mesh(myPlane, material); // TODO: turn test plane into the hitbox
@@ -46,7 +45,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         scene.add(test);*/
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
-        camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
+        camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
 
         renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
@@ -163,13 +162,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         if (!lastHeadPosition)
             return;
 
-        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * (-100);
-        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 10;
+        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * 1.5;
+        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 1.5;
 
-        camera.lookAt(new Three.Vector3(
-            cameraVectorOfView.x - lastHeadPosition.x * 30,
-            cameraVectorOfView.y - lastHeadPosition.y * 30
-        ));
     }
 
     Game.prototype._render = function() {
@@ -180,11 +175,11 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     // TODO: logic of velocity changing
     function getVelocity() {
         return 1;
-    };
+    }
 
     function getAsteroidCreationInterval() {
         return 500;
-    };
+    }
 
     return Game;
 });
