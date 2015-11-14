@@ -1,5 +1,12 @@
 define(['jquery'], function ($) {
     //TODO тут все норм, пока это не трогаем
+
+    var mainDisplay = $('.main-display');
+
+
+    mainDisplay.hide();
+
+
     /*var r = $('#root');
     var g = new Game(r);
 
