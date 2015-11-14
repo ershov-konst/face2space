@@ -33,6 +33,13 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         asteroidSpheres.push(sphere);
     }
 
+    function createFigureWithGenerator( generator ) {
+        var newAsteroid = generator.getSpiral();
+        var sphere = getAsteroid(newAsteroid.radius);
+        sphere.position.set(newAsteroid.positionX, newAsteroid.positionY, 0);
+        scene.add(sphere);
+        asteroidSpheres.push(sphere);
+    }
     /**
      * The class that draws the scene and performs all basic operations of the game
      * @param $placeholder jQuery wrapped DOM element where the scene will be rendered
@@ -69,9 +76,10 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
     function startGeneratingAsteroids() {
         createAsteroidInterval =  setInterval(function() {
-            createAsteroidWithGenerator(generator);
-            createAsteroidWithGenerator(generator);
-            createAsteroidWithGenerator(centralGenerator);
+            //createAsteroidWithGenerator(generator);
+            //createAsteroidWithGenerator(generator);
+            //createAsteroidWithGenerator(centralGenerator);
+            createFigureWithGenerator(centralGenerator);
         }, getAsteroidCreationInterval());
     }
 
@@ -164,9 +172,9 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     function moveCamera() {
         if (!lastHeadPosition)
             return;
-
-        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * 1.5;
-        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 1.5;
+        var coef = 1.2;
+        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * coef;
+        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * coef;
 
     }
 
@@ -181,7 +189,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     }
 
     function getAsteroidCreationInterval() {
-        return 500;
+        return 10;
     }
 
     return Game;
