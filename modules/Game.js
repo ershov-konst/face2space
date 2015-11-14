@@ -45,7 +45,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         scene.add(test);*/
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
-        camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
+        camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
 
         renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
@@ -168,11 +168,11 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     // TODO: logic of velocity changing
     function getVelocity() {
         return 1;
-    };
+    }
 
     function getAsteroidCreationInterval() {
         return 500;
-    };
+    }
 
     return Game;
 });
