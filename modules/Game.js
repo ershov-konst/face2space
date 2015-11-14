@@ -2,7 +2,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
 
     var renderer,
         scene,
-        camera;
+        camera,
+        checker;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
@@ -15,7 +16,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     var CENTRAL_GENERATOR_RANGE = 10;
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
-    var checker = new Checker();
     var asteroidSpheres = [];
 
     setInterval(function() {
@@ -50,9 +50,14 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         scene.add(camera);
         camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
+
         renderer = new Three.WebGLRenderer({antialias: true});
         renderer.setClearColor(0x2b2b2b);
         renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        renderer.render(scene, camera);
+        checker = new Checker(camera);
+
         $placeholder.append(renderer.domElement);
     }
 
@@ -77,6 +82,21 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         asteroidSpheres.forEach(function (a) {
             a.position.z += getVelocity();
         });
+
+        for (var i = 0; i < asteroidSpheres.length; i++) {
+            var a = asteroidSpheres[i];
+            var result = checker.checkObject(a);
+            switch(result) {
+                case Checker.MISS:
+                    asteroidSpheres.splice(i, 1);
+                    console.log("MISS");
+                    break;
+                case Checker.HIT:
+                    //TODO: emit event 'lose'
+                    console.log('HIT'); // TODO: remove objects from the scene
+                    break;
+            }
+        }
 
         moveCamera();
     };
