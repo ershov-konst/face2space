@@ -35,7 +35,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     // var const_t1_max = 12000,
     //     const_t1_min = 9000;
     var tr1 = 10;//"время" до запуска спирали
-    var tr2 = 20;//"время в спирали"
+    var tr2 = 7;//"время в спирали"
     var timer_1 = 0;
     var timer_2 = 0;
     var generateSpiral, generateSimpleObjects;
@@ -47,7 +47,6 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
 
         generateSimpleObjects = setInterval(function () {
             console.log("timer_1 " + timer_1 );
-            createAsteroidWithGenerator(generator1);
             createAsteroidWithGenerator(generator1);
             timer_1 ++;
             if ( timer_1 == tr1) {
