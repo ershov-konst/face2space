@@ -66,5 +66,4 @@ define(['jquery', 'Game'], function ($, Game) {
     });
 
     mainDisplay.show();
-
 });
