@@ -1,17 +1,14 @@
 requirejs.config({
    paths: {
       'three': '../lib/three',
-      'EventBus': '../lib/EventBus'
+      'EventBus': '../lib/EventBus',
+      'jquery': '../lib/jquery-2.1.4.min',
+      'HeadTracker': '../lib/headtrackr'
    }
 });
 
-require(['three', 'EventBus'], function(tm, THREE, EventBus){
-
-   var t = new tm();
-   console.log(t.testMethod(2));
-   console.log(THREE);
-   console.log(EventBus);
-    //пример использования
+require(['Master'], function(Master){
+   //РїСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
    //     x0 = 0;
    //     x1 = window.innerWidth + 1000;
    //     y0 = 0;
