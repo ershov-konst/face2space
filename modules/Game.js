@@ -136,6 +136,7 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         asteroidSpheres.forEach(function(a) {
             scene.remove(a);
         });
+        asteroidSpheres = [];
     };
 
     Game.prototype.pause = function() {
