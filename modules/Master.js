@@ -108,8 +108,13 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     }
                 });
 
-                changeScoreInterval = setInterval(function () {
-                    changeScore(g.getScore());
+                g.on('hitBonus', function() {
+                    console.log('BONUS!');
+                });
+
+                setInterval(function () {
+                    if (gameStatus == STATUS_STARTED)
+                        changeScore(g.getScore());
                 }, 1000 / 10);
 
                 gameStatus = STATUS_STARTED;
