@@ -79,7 +79,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         }
     });
     $(document).on('keydown', function (e) {
-        if (e.keyCode === 32  && faceFounded && gameStatus = STATUS_ENTER_YOUR_NAME) {
+        if (e.keyCode === 32  && faceFounded && gameStatus != STATUS_ENTER_YOUR_NAME) {
 
             //Обработка пробела
 
