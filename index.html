@@ -3,10 +3,12 @@
 <head>
    <meta charset="UTF-8">
    <title>face2space</title>
-   <link rel="stylesheet" href="/css/main.css"/>
+   <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
 <div id="root" class="container">
+<canvas id="inputCanvas" width="320" height="240" style="display:none;" ></canvas>
+<video id="inputVideo" autoplay loop></video>
     <div id="placeholder"></div>
 </div>
 <script src="./lib/require.js" data-main="./modules/main.js"></script>
