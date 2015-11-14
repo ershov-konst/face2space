@@ -53,7 +53,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         scoreElem.html(score);
     }
 
-    function showPasue(p) {
+    function showPause(p) {
         shpause.html(p);
         shpause.fadeIn('slow');
     }
@@ -92,7 +92,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                 }
                 else if (g != undefined && gameStatus == STATUS_STARTED) {
                     g.pause();
-                    showPasue('PAUSE');
+                    showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
                     faceFounded = false;
                 }
@@ -181,7 +181,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         else if (gameStatus == STATUS_STARTED) {
             g.pause();
             gameStatus = STATUS_PAUSED;
-            showPasue('PAUSE');
+            showPause('PAUSE');
         }
         else {
             gameStatus = STATUS_STARTED;
