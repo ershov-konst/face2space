@@ -27,15 +27,10 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
     }
 
     function showAchiev(ach){
-        $(document).ready(function(ach){
-            achievem.fadeIn(slow);
-            achievem.html(ach);
-            setTimeout(achievem.fadeOut(slow), 5000);
-        });
+        achievem.html(ach);
+        achievem.fadeIn('slow');
+        setTimeout(achievem.fadeOut(2000), 5000);
     }
-
-
-    mainDisplay.hide();
 
     $(document).on('keydown', function (e) {
         if (e.keyCode === 32) {
@@ -53,13 +48,15 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
                     changeLives(lives);
                 });
 
-                setInterval(function () {
+                /*setInterval(function () {
                     changeScore(g.getScore());
-                }, 1000/10);
+                }, 1000/10);*/
 
             }
         }
 
     });
+
+    mainDisplay.show();
 
 });

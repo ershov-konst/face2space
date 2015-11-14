@@ -8,7 +8,8 @@ html, body {
 
 #root {
     height: 100%;
-    background: #000;
+    background: #000 url("../img/space.jpg") no-repeat;
+
 }
 
 .appname {
@@ -90,10 +91,11 @@ html, body {
 
 .achievemgame {
     font-size: 150%;
-    position: fixed;
+    position: absolute;
     bottom: 20%;
-    left: 35%;
-    display: flex;
+    width: 100%;
+    text-align: center;
+    display: block;
     overflow: auto;
     font-family: 'Audiowide';
     color: white;
@@ -104,4 +106,8 @@ html, body {
     width: 32px;
     background: url("../img/live.png") no-repeat;
     margin-right: 10px;
+}
+
+.display{
+    display: none;
 }
