@@ -1,29 +1,38 @@
-define(['jquery'], function ($) {
+define(['jquery', 'Game'], function ($, Game) {
     //TODO тут все норм, пока это не трогаем
 
-    var mainDisplay = $('.main-display');
+    var
+        STATUS_STOPED  = 0,
+        STATUS_STARTED = 1,
+        STATUS_PAUSED  = 2;
 
+    var
+        gameStatus = STATUS_STOPED,
+        forRender = $('#render'),
+        mainDisplay = $('.main-display'),
+        gameDisplay = $('.game-display');
 
-    mainDisplay.hide();
+    $(document).on('keydown', function (e) {
+        if (e.keyCode === 32) {
 
+            //Обработка пробела
 
-    /*var r = $('#root');
-    var g = new Game(r);
+            if (STATUS_STOPED){
 
-    $(document).ready(function () {
-        $(document).on('keydown', function (e) {
-            if (e.keyCode === 32) {
+                var g = new Game(forRender);
                 g.start();
-
                 g.on('lose', function(){
                     //показываем финальный экран
                 });
-                //changeLives
+
                 setInterval(function () {
-                    g.getScore();
-                    g.redraw();
-                }, 20);
+                    //g.getScore();
+
+                }, 1000/10);
+
             }
-        });
-    });*/
+        }
+
+    });
+
 });

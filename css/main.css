@@ -23,16 +23,20 @@ html, body{
     font-size: 300%;
 }
 .achievement{
-    width: 5%;
-    height: 10%;
-    position: fixed;
+    width: 64px;
+    height: 64px;
+    position: absolute;
     top: 5%;
-    left: 90%;
-    display: flex;
-    overflow: auto;
-    font-family: 'Audiowide';
-    color: white;
-    font-size: 100%;
+    right: 5%;
+    display: block;
+    background: url("../img/achievement.png") no-repeat;
+    background-size: cover;
+}
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .achievement{
+        background: url("../img/achievementx2.png") no-repeat;
+        background-size: cover;
+    }
 }
 .startbutton{
     position: fixed;
