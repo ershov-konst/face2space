@@ -55,9 +55,9 @@ define(['jquery', 'Game'], function ($, Game) {
                     if (livesCount == 0){
                         g.stop();
                         gameDisplay.hide();
-                        mianDisplay.show();
+                        mainDisplay.show();
                         mainDisplay.append('<div class="scoreuser"></div>');
-                        $('.scoreuser').html(score);
+                        $('.scoreuser').html(g.getScore());
                     }
                 });
 
