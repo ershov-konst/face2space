@@ -105,6 +105,18 @@ html, body {
     color: white;
 }
 
+.shpause {
+    font-size: 150%;
+    position: absolute;
+    bottom: 20%;
+    width: 100%;
+    text-align: center;
+    display: block;
+    overflow: auto;
+    font-family: 'Audiowide';
+    color: white;
+}
+
 .live {
     height: 32px;
     width: 32px;
