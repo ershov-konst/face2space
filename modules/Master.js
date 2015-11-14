@@ -169,6 +169,10 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                 }
             });
 
+            g.on('hitBonus', function () {
+                showAchiev('+100 points')
+            });
+
             changeScoreInterval = setInterval(function () {
                 if (gameStatus == STATUS_STARTED){
                     changeScore(g.getScore());
