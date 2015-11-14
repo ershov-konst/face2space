@@ -15,6 +15,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         lives = gameDisplay.find('.lives'),
         scoreElem = gameDisplay.find('.score'),
         achievem = gameDisplay.find('.achievemgame'),
+        shpause = gameDisplay.find('.shpause'),
         videoInput = document.getElementById('inputVideo'),
         canvasInput = document.getElementById('inputCanvas'),
         canvasHeight = canvasInput.height,
@@ -50,10 +51,15 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         scoreElem.html(score);
     }
 
+    function showPasue(p) {
+        shpause.html(p);
+        shpause.fadeIn('slow');
+    }
+
     function showAchiev(ach) {
         achievem.html(ach);
         achievem.fadeIn('slow');
-        setTimeout(achievem.fadeOut(2000), 5000);
+        setTimeout(function(){achievem.fadeOut(1000);},1000);
     }
 
     var g;
@@ -79,10 +85,12 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
                         g.resume();
+                        shpause.hide();
                     }
                 }
                 else if (g != undefined && gameStatus == STATUS_STARTED) {
                     g.pause();
+                    showPasue('PAUSE');
                     gameStatus = STATUS_PAUSED;
                     faceFounded = false;
                 }
@@ -97,10 +105,12 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
                         g.resume();
+                        shpause.hide();
                     }
                 }
                 else if (g != undefined && gameStatus == STATUS_STARTED) {
                     g.pause();
+                    showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
                     faceFounded = false;
                 }
@@ -108,10 +118,12 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             if (g != undefined && gameStatus == STATUS_PAUSED ) {
                 gameStatus = STATUS_STARTED;
                 g.resume();
+                shpause.hide();
             }
         }
         else if (g != undefined && gameStatus == STATUS_STARTED) {
             g.pause();
+            showPause('PAUSE');
             gameStatus = STATUS_PAUSED;
             faceFounded = false;
         }
@@ -145,7 +157,6 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
                     scoreForUser.find('.totalscore')
                         .html(g.getScore());
                     scoreForUser.find('input').focus();
-
                 }
             });
 
@@ -161,10 +172,12 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         else if (gameStatus == STATUS_STARTED) {
             g.pause();
             gameStatus = STATUS_PAUSED;
+            showPasue('PAUSE');
         }
         else {
             gameStatus = STATUS_STARTED;
             g.resume();
+            shpause.hide();
         }
 
     }
