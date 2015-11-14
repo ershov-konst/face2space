@@ -130,4 +130,5 @@ html, body {
 .for-render{
     position: absolute;
     overflow: hidden;
+    height: 100%;
 }
