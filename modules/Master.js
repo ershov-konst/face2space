@@ -85,7 +85,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
 
                     changeLives(livesCount);
                     if (livesCount == 0){
-                        //g.stop();
+                        g.stop();
                     }
                 });
 

@@ -10,14 +10,17 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
     var createAsteroidInterval;
 
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
+    var VIEW_ANGLE = 60, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
 
     var lastHeadPosition = { x: null, y: null };
     var initialCameraPosition = new Three.Vector3(0, 0, 200);
     var cameraVectorOfView = new Three.Vector3(0, 0, 0);
 
-    var generator = new Generator(-50*ASPECT, 50*ASPECT, -50, 50);
-    var CENTRAL_GENERATOR_RANGE = 10;
+
+    var CENTRAL_GENERATOR_RANGE = 20;
+    var OUTER_GENERATOR_RANGE = 80;
+
+    var generator = new Generator(-OUTER_GENERATOR_RANGE*ASPECT, OUTER_GENERATOR_RANGE*ASPECT, -OUTER_GENERATOR_RANGE, OUTER_GENERATOR_RANGE);
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
     var asteroidSpheres = [];
