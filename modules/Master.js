@@ -12,8 +12,8 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
         mainDisplay = $('.main-display'),
         gameDisplay = $('.game-display'),
         lives       = gameDisplay.find('.lives'),
-        score       = gameDisplay.find('.score');
-
+        score       = gameDisplay.find('.score'),
+        achievem    = gameDisplay.find('.achievemgame');
 
     function changeLives(i){
         lives.empty();
@@ -24,6 +24,14 @@ define(['jquery'/*, 'Game'*/], function ($, Game) {
 
     function changeScore(score){
         score.html(score);
+    }
+
+    function showAchiev(ach){
+        $(document).ready(function(ach){
+            achievem.fadeIn(slow);
+            achievem.html(ach);
+            setTimeout(achievem.fadeOut(slow), 5000);
+        });
     }
 
 
