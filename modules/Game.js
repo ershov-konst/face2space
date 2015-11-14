@@ -1,4 +1,4 @@
-define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, Generator, Checker){
+define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three, EventBus, Generator, Checker){
 
     var renderer,
         scene,
@@ -49,7 +49,12 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
         renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        renderer.render(scene, camera);
+        this.effect = new THREE.AnaglyphEffect(renderer);
+        this.effect.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        this.effect.render(scene, camera);
+
+        this._bindedAnimate = this._animate.bind(this);
+
         checker = new Checker(camera);
 
         startGeneratingAsteroids();
@@ -76,7 +81,7 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      * Call this method to start animation
      */
     Game.prototype.start = function() {
-        Game.prototype._animate();
+        this._animate();
     };
 
     Game.prototype.getScore = function() {
@@ -84,8 +89,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     };
 
     Game.prototype._animate = function() {
-        requestAnimationFrame(Game.prototype._animate);
-        Game.prototype._render();
+        requestAnimationFrame(this._bindedAnimate);
+        this._render();
 
         asteroidSpheres.forEach(function (a) {
             a.position.z += getVelocity();
@@ -134,7 +139,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     }
 
     Game.prototype._render = function() {
-        renderer.render(scene, camera);
+        this.effect.render(scene, camera);
+        //renderer.render(scene, camera);
     };
 
     // TODO: logic of velocity changing
