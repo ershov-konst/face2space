@@ -6,6 +6,9 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         checker,
         eventBus = new EventBus();
 
+    var requestId; // for requestAnimationFrame()
+    var createAsteroidInterval;
+
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
 
@@ -58,11 +61,15 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     }
 
     function startGeneratingAsteroids() {
-        setInterval(function() {
+        createAsteroidInterval =  setInterval(function() {
             createAsteroidWithGenerator(generator);
             createAsteroidWithGenerator(generator);
             createAsteroidWithGenerator(centralGenerator);
         }, getAsteroidCreationInterval());
+    }
+
+    function stopGeneratingAsteroids() {
+        clearInterval(createAsteroidInterval);
     }
 
     function getAsteroid(radius) {
@@ -76,15 +83,42 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      * Call this method to start animation
      */
     Game.prototype.start = function() {
+        if (!requestId)
+            Game.prototype._animate();
+    };
+
+    Game.prototype.stop = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+        asteroidSpheres.forEach(function(a) {
+            scene.remove(a);
+        });
+    };
+
+    Game.prototype.pause = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+    };
+
+    Game.prototype.resume = function() {
+        startGeneratingAsteroids();
         Game.prototype._animate();
     };
+
+    function stopAnimation() {
+        if (requestId) {
+            //noinspection JSUnresolvedFunction
+            cancelAnimationFrame(requestId);
+            requestId = null;
+        }
+    }
 
     Game.prototype.getScore = function() {
         return 0;
     };
 
     Game.prototype._animate = function() {
-        requestAnimationFrame(Game.prototype._animate);
+        requestId = requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
 
         asteroidSpheres.forEach(function (a) {
