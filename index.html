@@ -3,13 +3,23 @@
 <head>
    <meta charset="UTF-8">
    <title>face2space</title>
-   <link rel="stylesheet" href="/css/main.css"/>
+   <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
 <div id="root" class="container">
-    <div id="placeholder"></div>
-   hello world
-</div>
-<script src="./lib/require.js" data-main="./modules/main.js"></script>
+   <div id="render" class="for-render"></div>
+
+   <div class="main-display display">
+      <div class="appname">face2space</div>
+      <div class="startbutton" id="space">Press 'Space' to start!</div>
+      <div class="achievement"></div>
+      <div class="pilot">Best Pilots</div>
+   </div>
+   <div class="game-display display">
+      <div class='lives'></div>
+      <div class='score'></div>
+      <div class='achievemgame'></div>
+   </div>
+   <script src="lib/require.js" data-main="modules/main.js"></script>
 </body>
 </html>
