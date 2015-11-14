@@ -6,8 +6,8 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         asteroid;
 
     var lastHeadPosition = { x: null, y: null };
-    var initialCameraPosition = new Three.Vector3(5000, 5000, 10000);
-    var cameraVectorOfView = new Three.Vector3(5000, 5000, 0);
+    var initialCameraPosition = new Three.Vector3(0, 0, 100);
+    var cameraVectorOfView = new Three.Vector3(50, 50, 0);
 
     var generator = new Generator(0, 10000, 0, 10000);
     //var checker = new Checker();
@@ -27,17 +27,18 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      */
     function Game($placeholder) {
         scene = new Three.Scene();
-        var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-        var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 12000;
-        var myPlane = new Three.PlaneGeometry(340, 170, 1, 1);
+        var SCREEN_WIDTH = 5, SCREEN_HEIGHT = 5;
+        var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 120;
+        var myPlane = new Three.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT, 1, 1);
         var material = new Three.MeshBasicMaterial({color: "red", transparent: true, opacity: 0.1});
         var test = new Three.Mesh(myPlane, material);
-        test.position.x = 5000;
-        test.position.y = 5000;
-        test.position.z = 9800;
+        test.position.x = 0;
+        test.position.y = 0;
+        test.position.z = 100;
         scene.add(test);
         camera = new Three.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         scene.add(camera);
+        console.log(camera);
         camera.position.set(initialCameraPosition.x, initialCameraPosition.y, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
         renderer = new Three.WebGLRenderer({antialias: true});
@@ -70,10 +71,10 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     Game.prototype._animate = function() {
         requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
-        asteroidSpheres.filter(function (curElem) {
-
-            a.position.z += getVelocity();
-        })
+        // asteroidSpheres.filter(function (curElem) {
+        //
+        //     a.position.z += getVelocity();
+        // })
         asteroidSpheres.forEach(function(a) {
 
 
