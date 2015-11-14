@@ -6,6 +6,9 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         checker,
         eventBus = new EventBus();
 
+    var requestId; // for requestAnimationFrame()
+    var createAsteroidInterval;
+
     var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 20, FAR = 200;
 
@@ -18,12 +21,6 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
     var centralGenerator = new Generator(-CENTRAL_GENERATOR_RANGE*ASPECT, CENTRAL_GENERATOR_RANGE*ASPECT,
         -CENTRAL_GENERATOR_RANGE, CENTRAL_GENERATOR_RANGE);
     var asteroidSpheres = [];
-
-    setInterval(function() {
-        createAsteroidWithGenerator(generator);
-        createAsteroidWithGenerator(generator);
-        createAsteroidWithGenerator(centralGenerator);
-    }, getAsteroidCreationInterval());
 
     function createAsteroidWithGenerator(generator) {
         var newAsteroid = generator.getObject();
@@ -51,14 +48,27 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         camera.position.set(initialCameraPosition.x, initialCameraPosition, initialCameraPosition.z);
         camera.lookAt(cameraVectorOfView);
 
-        renderer = new Three.WebGLRenderer({antialias: true});
-        renderer.setClearColor(0x2b2b2b);
+        renderer = new Three.WebGLRenderer({antialias: true, alpha: true});
         renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         renderer.render(scene, camera);
         checker = new Checker(camera);
 
+        startGeneratingAsteroids();
+
         $placeholder.append(renderer.domElement);
+    }
+
+    function startGeneratingAsteroids() {
+        createAsteroidInterval =  setInterval(function() {
+            createAsteroidWithGenerator(generator);
+            createAsteroidWithGenerator(generator);
+            createAsteroidWithGenerator(centralGenerator);
+        }, getAsteroidCreationInterval());
+    }
+
+    function stopGeneratingAsteroids() {
+        clearInterval(createAsteroidInterval);
     }
 
     function getAsteroid(radius) {
@@ -72,15 +82,42 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
      * Call this method to start animation
      */
     Game.prototype.start = function() {
+        if (!requestId)
+            Game.prototype._animate();
+    };
+
+    Game.prototype.stop = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+        asteroidSpheres.forEach(function(a) {
+            scene.remove(a);
+        });
+    };
+
+    Game.prototype.pause = function() {
+        stopAnimation();
+        stopGeneratingAsteroids();
+    };
+
+    Game.prototype.resume = function() {
+        startGeneratingAsteroids();
         Game.prototype._animate();
     };
+
+    function stopAnimation() {
+        if (requestId) {
+            //noinspection JSUnresolvedFunction
+            cancelAnimationFrame(requestId);
+            requestId = null;
+        }
+    }
 
     Game.prototype.getScore = function() {
         return 0;
     };
 
     Game.prototype._animate = function() {
-        requestAnimationFrame(Game.prototype._animate);
+        requestId = requestAnimationFrame(Game.prototype._animate);
         Game.prototype._render();
         asteroidSpheres.forEach(function (a) {
             a.position.z += getVelocity();
@@ -119,13 +156,9 @@ define(['three', 'EventBus', 'generator','checker'], function(Three, EventBus, G
         if (!lastHeadPosition)
             return;
 
-        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * (-100);
-        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 10;
+        camera.position.x = initialCameraPosition.x + lastHeadPosition.x * 1.5;
+        camera.position.y = initialCameraPosition.y + lastHeadPosition.y * 1.5;
 
-        camera.lookAt(new Three.Vector3(
-            cameraVectorOfView.x - lastHeadPosition.x * 30,
-            cameraVectorOfView.y - lastHeadPosition.y * 30
-        ));
     }
 
     Game.prototype._render = function() {
