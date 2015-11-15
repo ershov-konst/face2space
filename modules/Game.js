@@ -357,8 +357,8 @@ define(['three', 'EventBus', 'generator','checker', 'anaglyph'], function(Three,
         return 10;
     }
     Game.prototype._render = function() {
-        //this.effect.render(scene, camera);
-        renderer.render(scene, camera);
+        this.effect.render(scene, camera);
+        //renderer.render(scene, camera);
     };
 
     function getAsteroidCreationInterval() {
