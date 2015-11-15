@@ -24,6 +24,7 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         scoreForUser = mainDisplay.find('.scoreuser'),
         livesCount = 0,
         changeScoreInterval,
+        unpausing = false,
         musicMenu = document.getElementById('music-menu'),
         musicGame = document.getElementById('music-game');
 
@@ -58,6 +59,24 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         shpause.fadeIn('slow');
     }
 
+    function unpause(){
+        if (!unpausing){
+            unpausing = true;
+            showAchiev(3);
+            setTimeout(function(){
+                showAchiev(2);
+                setTimeout(function(){
+                    showAchiev(1);
+                    setTimeout(function(){
+                        unpausing = false;
+                        showAchiev('GO!');
+                        g.resume();
+                    },1000)
+                },1000)
+            },1000)
+        }
+    }
+
     function showAchiev(ach) {
         achievem.html(ach);
         achievem.fadeIn('slow');
@@ -77,20 +96,23 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
         mainDisplay.find('.startbutton').hide();
         if ( status == 'found' ) {
             faceFounded = true;
+            mainDisplay.find('.facestart').hide();
             mainDisplay.find('.startbutton').show();
             $(document).on('headtrackrStatus', function (e) {
                 var status = e.originalEvent.status;
                 mainDisplay.find('.startbutton').hide();
+                mainDisplay.find('.facestart').show();
                 if ( status == 'found' ) {
                     faceFounded = true;
+                    mainDisplay.find('.facestart').hide();
                     mainDisplay.find('.startbutton').show();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
-                        g.resume();
+                        unpause();
                         shpause.hide();
                     }
                 }
-                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
                     g.pause();
                     showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
@@ -100,17 +122,19 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             $(document).on('headtrackrStatus', function (e) {
                 var status = e.originalEvent.status;
                 mainDisplay.find('.startbutton').hide();
+                mainDisplay.find('.facestart').show();
                 if ( status == 'found' ) {
                     faceFounded = true;
+                    mainDisplay.find('.facestart').hide();
                     mainDisplay.find('.startbutton').show();
                     spacePress();
                     if (g != undefined && gameStatus == STATUS_PAUSED ) {
                         gameStatus = STATUS_STARTED;
-                        g.resume();
+                        unpause();
                         shpause.hide();
                     }
                 }
-                else if (g != undefined && gameStatus == STATUS_STARTED) {
+                else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
                     g.pause();
                     showPause('PAUSE');
                     gameStatus = STATUS_PAUSED;
@@ -119,11 +143,11 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             });
             if (g != undefined && gameStatus == STATUS_PAUSED ) {
                 gameStatus = STATUS_STARTED;
-                g.resume();
+                unpause();
                 shpause.hide();
             }
         }
-        else if (g != undefined && gameStatus == STATUS_STARTED) {
+        else if (g != undefined && gameStatus == STATUS_STARTED && !unpausing) {
             g.pause();
             showPause('PAUSE');
             gameStatus = STATUS_PAUSED;
@@ -182,14 +206,14 @@ define(['jquery', 'Game', 'HeadTracker', 'smoother'], function ($, Game, HeadTra
             gameStatus = STATUS_STARTED;
 
         }
-        else if (gameStatus == STATUS_STARTED) {
+        else if (gameStatus == STATUS_STARTED && !unpausing) {
             g.pause();
             gameStatus = STATUS_PAUSED;
             showPause('PAUSE');
         }
         else {
             gameStatus = STATUS_STARTED;
-            g.resume();
+            unpause();
             shpause.hide();
         }
 
